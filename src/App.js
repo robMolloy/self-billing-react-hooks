@@ -34,7 +34,7 @@ const Select = ({ children, name, id, variant, label, ...props }) => {
 function App() {
   // const classes = useStyles();
   return (
-    <div className="App" style={{ width: "400px" }}>
+    <div className="App" style={{ width: "100%", maxWidth: "480px" }}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           hi
