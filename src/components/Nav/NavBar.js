@@ -11,21 +11,21 @@ import Drawer from "./Drawer";
 import navItems from "./navItems";
 import { v4 as uuid } from "uuid";
 
-const useStyles = makeStyles((theme) => {
+const useStyles = makeStyles(({ headerHeight, ...theme }) => {
+  headerHeight = headerHeight === undefined ? "48px" : headerHeight;
+
   return {
     root: { flexGrow: 1 },
-    toolbar: { maxHeight: theme.headerHeight },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      flexGrow: 1,
-    },
-    tabs: { maxHeight: theme.headerHeight },
-    placeholder: {
-      maxHeight: theme.headerHeight,
-      minHeight: theme.headerHeight,
-    },
+
+    toolbar: { maxHeight: headerHeight },
+
+    menuButton: { marginRight: theme.spacing(2) },
+
+    title: { flexGrow: 1 },
+
+    tabs: { maxHeight: headerHeight },
+
+    placeholder: { maxHeight: headerHeight, minHeight: headerHeight },
   };
 });
 

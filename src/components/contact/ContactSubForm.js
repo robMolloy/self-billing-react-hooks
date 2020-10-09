@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 import { contactMethods } from "../../contexts/options";
 import { ucFirst } from "../../user_modules/StringManipulation";
-import MenuItem from "@material-ui/core/MenuItem";
 import GridInput from "../custom/GridInput";
 import GridSelect from "../custom/GridSelect";
+import GridContainer from "../custom/GridContainer";
 
 import { contactBlankRow } from "../../object_info/blankRows";
-import { Grid } from "@material-ui/core";
 
 const schema = yup.object().shape({
   con_name: yup.string().required("Contact name is a required field"),
@@ -21,7 +20,6 @@ const ContactSubForm = ({ contact, ...props }) => {
   const { watch } = useForm();
   const con_type = watch("con_type");
   contact = contact === undefined ? contactBlankRow : contact;
-  // let [age, setAge] = useState();
 
   const { register, handleSubmit, errors } = useForm({
     mode: "onChange",
@@ -29,7 +27,7 @@ const ContactSubForm = ({ contact, ...props }) => {
   });
 
   return (
-    <Grid container spacing={2}>
+    <GridContainer>
       <GridSelect
         grid={{ xs: 6 }}
         name="con_method"
@@ -37,11 +35,11 @@ const ContactSubForm = ({ contact, ...props }) => {
         required={con_type === "phone" ? true : false}
         label="Method"
       >
-        <MenuItem disabled value={""}></MenuItem>
+        <option disabled value={""}></option>
         {contactMethods.map((contactMethod) => (
-          <MenuItem key={contactMethod} value={contactMethod}>
+          <option key={contactMethod} value={contactMethod}>
             {ucFirst(contactMethod)}
-          </MenuItem>
+          </option>
         ))}
       </GridSelect>
 
@@ -53,7 +51,7 @@ const ContactSubForm = ({ contact, ...props }) => {
         label="Address"
         required
       />
-    </Grid>
+    </GridContainer>
   );
 };
 

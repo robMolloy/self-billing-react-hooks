@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import ContactSubForm from "../contact/ContactSubForm";
+// import ContactSubForm from "../contact/ContactSubForm";
 
 import PrimaryButton from "../custom/PrimaryButton";
 import MainContainer from "../custom/MainContainer";
 import Form from "../custom/Form";
-import Input from "../custom/Input";
-import { Grid } from "@material-ui/core";
+import GridInput from "../custom/GridInput";
+import GridContainer from "../custom/GridContainer";
+import GridSelect from "../custom/GridSelect";
 
 const schema = yup.object().shape({
   cus_first_name: yup
@@ -43,24 +44,27 @@ const CustomerForm = () => {
   return (
     <MainContainer maxWidth="sm">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          ref={register}
-          name="cus_first_name"
-          label="First Name"
-          error={!!errors.cus_first_name}
-          helperText={errors?.cus_first_name?.message}
-        />
-        <Input
-          ref={register}
-          name="cus_last_name"
-          label="Last Name"
-          error={!!errors.cus_last_name}
-          helperText={errors?.cus_last_name?.message}
-        />
-        <Grid>
-          <ContactSubForm />
-        </Grid>
-        <PrimaryButton>Submit</PrimaryButton>
+        <GridContainer>
+          <GridInput
+            grid={{ xs: 12 }}
+            ref={register}
+            name="cus_first_name"
+            label="First Name"
+            error={!!errors.cus_first_name}
+            helperText={errors?.cus_first_name?.message}
+          />
+          <GridInput
+            grid={{ xs: 12 }}
+            ref={register}
+            name="cus_last_name"
+            label="Last Name"
+            error={!!errors.cus_last_name}
+            helperText={errors?.cus_last_name?.message}
+          />
+          <GridSelect label="hi" grid={{ xs: 12 }}></GridSelect>
+          {/* <Grid><ContactSubForm /></Grid> */}
+          <PrimaryButton>Submit</PrimaryButton>
+        </GridContainer>
       </Form>
     </MainContainer>
   );

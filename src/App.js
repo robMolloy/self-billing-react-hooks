@@ -1,24 +1,29 @@
 import React from "react";
-import "./App.css";
-import Grid from "@material-ui/core/Grid";
-
-import GridSelect from "./components/custom/GridSelect";
-import GridInput from "./components/custom/GridInput";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import CustomerPage from "./components/customer/CustomerPage";
+import ContactPage from "./components/contact/ContactPage";
+import PrjCusLinkPage from "./components/prj_cus_link/PrjCusLinkPage";
+import ProjectPage from "./components/project/ProjectPage";
+import RecItemPage from "./components/rec_item/RecItemPage";
+import RecordPage from "./components/record/RecordPage";
+import NavBar from "./components/Nav/NavBar";
 
 function App() {
-  // const classes = useStyles();
+  let HomePage = CustomerPage;
   return (
-    <div className="App" style={{ width: "100%", maxWidth: "480px" }}>
-      <Grid container spacing={2}>
-        <GridInput grid={{ xs: 6 }} label="Age" variant="outlined" fullWidth />
-        <GridSelect grid={{ xs: 6 }} label="Age">
-          <option aria-label="None" value="" />
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
-        </GridSelect>
-      </Grid>
-    </div>
+    <Router>
+      <div className="App">
+        <NavBar />
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/customers" component={CustomerPage} />
+        <Route exact path="/contacts" component={ContactPage} />
+        <Route exact path="/prjCusLinks" component={PrjCusLinkPage} />
+        <Route exact path="/projects" component={ProjectPage} />
+        <Route exact path="/recItems" component={RecItemPage} />
+        <Route exact path="/records" component={RecordPage} />
+        <footer>a</footer>
+      </div>
+    </Router>
   );
 }
 
