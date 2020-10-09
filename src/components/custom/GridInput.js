@@ -10,4 +10,4 @@ const GridInput = forwardRef(({ grid, ...props }, ref) => {
   );
 });
 
-export default Input;
+export default GridInput;
