@@ -1,11 +1,11 @@
 import React from "react";
-import Grid from "./Grid";
+import MUIGrid from "@material-ui/core/Grid";
 
 const GridContainer = ({ children, ...props }) => {
   return (
-    <Grid container spacing={2} {...props}>
+    <MUIGrid container spacing={2} {...props}>
       {children}
-    </Grid>
+    </MUIGrid>
   );
 };
 

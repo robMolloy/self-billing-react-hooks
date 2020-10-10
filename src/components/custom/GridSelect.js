@@ -1,13 +1,16 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import Select from "./Select";
-import Grid from "@material-ui/core/Grid";
+import GridItem from "./GridItem";
+// import Grid from "@material-ui/core/Grid";
 
-const GridInput = ({ grid, children, ...props }) => {
+const GridSelect = forwardRef(({ grid, children, ...props }, ref) => {
   return (
-    <Grid item {...grid}>
-      <Select {...props}>{children}</Select>
-    </Grid>
+    <GridItem {...grid}>
+      <Select ref={ref} {...props}>
+        {children}
+      </Select>
+    </GridItem>
   );
-};
+});
 
-export default GridInput;
+export default GridSelect;

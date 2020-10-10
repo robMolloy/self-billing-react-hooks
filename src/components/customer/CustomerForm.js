@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-// import ContactSubForm from "../contact/ContactSubForm";
+import ContactSubForm from "../contact/ContactSubForm";
 
-import PrimaryButton from "../custom/PrimaryButton";
+import GridButton from "../custom/GridButton";
+import GridItem from "../custom/GridItem";
 import MainContainer from "../custom/MainContainer";
 import Form from "../custom/Form";
 import GridInput from "../custom/GridInput";
 import GridContainer from "../custom/GridContainer";
-import GridSelect from "../custom/GridSelect";
 
 const schema = yup.object().shape({
   cus_first_name: yup
@@ -34,11 +35,11 @@ const CustomerForm = () => {
     resolver: yupResolver(schema),
   });
 
-  const [contactRows, setContactRows] = useState([]);
+  // const [contactRows, setContactRows] = useState([]);
 
   const onSubmit = (data) => {
-    console.log(contactRows);
-    console.log(data);
+    // console.log(contactRows);
+    // console.log(data);
   };
 
   return (
@@ -61,30 +62,30 @@ const CustomerForm = () => {
             error={!!errors.cus_last_name}
             helperText={errors?.cus_last_name?.message}
           />
-          <GridSelect label="hi" grid={{ xs: 12 }}></GridSelect>
-          {/* <Grid><ContactSubForm /></Grid> */}
-          <PrimaryButton>Submit</PrimaryButton>
+          <GridItem xs={12}>
+            <ContactSubForm />
+          </GridItem>
+          <GridButton grid={{ xs: 12 }}>Submit</GridButton>
         </GridContainer>
       </Form>
     </MainContainer>
   );
-
-  //   <div>
-  //   {Object.entries(contact_sub_forms).map((entry) => {
-  //     const temp_id = entry[0];
-  //     const contact = entry[1];
-  //     return (
-  //       <div key={temp_id} className="flex1 flexGap ac">
-  //         <ContactSubForm contact={contact} />
-  //         <div onClick={() => removeContactSubForm(temp_id)}>X</div>
-  //       </div>
-  //     );
-  //   })}
-  // </div>
 };
 
 export default CustomerForm;
 
+//   <div>
+//   {Object.entries(contact_sub_forms).map((entry) => {
+//     const temp_id = entry[0];
+//     const contact = entry[1];
+//     return (
+//       <div key={temp_id} className="flex1 flexGap ac">
+//         <ContactSubForm contact={contact} />
+//         <div onClick={() => removeContactSubForm(temp_id)}>X</div>
+//       </div>
+//     );
+//   })}
+// </div>
 /*
 
 import React, { useState } from "react";

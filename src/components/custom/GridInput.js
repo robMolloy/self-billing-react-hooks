@@ -1,12 +1,12 @@
 import React, { forwardRef } from "react";
 import Input from "./Input";
-import Grid from "@material-ui/core/Grid";
+import GridItem from "./GridItem";
 
 const GridInput = forwardRef(({ grid, ...props }, ref) => {
   return (
-    <Grid item {...grid}>
+    <GridItem {...grid}>
       <Input ref={ref} {...props} />
-    </Grid>
+    </GridItem>
   );
 });
 

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { contactMethods } from "../../contexts/options";
+import { contactMethods, contactTypes } from "../../contexts/options";
 import { ucFirst } from "../../user_modules/StringManipulation";
 import GridInput from "../custom/GridInput";
 import GridSelect from "../custom/GridSelect";
@@ -17,34 +18,53 @@ const schema = yup.object().shape({
 });
 
 const ContactSubForm = ({ contact, ...props }) => {
-  const { watch } = useForm();
-  const con_type = watch("con_type");
-  contact = contact === undefined ? contactBlankRow : contact;
-
-  const { register, handleSubmit, errors } = useForm({
+  // const { register, watch, handleSubmit, errors } = useForm({
+  const { register, watch } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+
+  const con_type = watch("con_type");
+
+  contact = contact === undefined ? contactBlankRow : contact;
 
   return (
     <GridContainer>
       <GridSelect
         grid={{ xs: 6 }}
-        name="con_method"
-        defaultValue={contact.con_method}
-        required={con_type === "phone" ? true : false}
-        label="Method"
+        inputRef={register}
+        defaultValue={contact.con_type}
+        name="con_type"
+        label="Type"
+        required
       >
         <option disabled value={""}></option>
-        {contactMethods.map((contactMethod) => (
-          <option key={contactMethod} value={contactMethod}>
-            {ucFirst(contactMethod)}
+        {contactTypes.map((contactType) => (
+          <option key={contactType} value={contactType}>
+            {ucFirst(contactType)}
           </option>
         ))}
       </GridSelect>
 
-      <GridInput
+      <GridSelect
         grid={{ xs: 6 }}
+        name="con_method"
+        defaultValue={contact.con_method}
+        label="Method"
+        required
+      >
+        <option disabled value={""}></option>
+        {(contactMethods[con_type] ? contactMethods[con_type] : []).map(
+          (contactMethod) => (
+            <option key={contactMethod} value={contactMethod}>
+              {ucFirst(contactMethod)}
+            </option>
+          )
+        )}
+      </GridSelect>
+
+      <GridInput
+        grid={{ xs: 12 }}
         ref={register}
         defaultValue={contact.con_address}
         name="con_address"
