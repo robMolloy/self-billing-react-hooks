@@ -4,7 +4,7 @@ import { blue, orange, red } from "@material-ui/core/colors";
 const theme = createMuiTheme({
   palette: { primary: blue, secondary: orange, contrast: { main: "#ffffff" } },
   status: { danger: red },
-  headerHeight: "48px",
+  headerHeight: "60px",
 });
 
 export default theme;

@@ -3,14 +3,13 @@ import { makeStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
-  button: {},
+  button: { height: "56px" },
 }));
 
 const PrimaryButton = ({ children, ...props }) => {
   const classes = useStyles();
   return (
     <Button
-      type="submit"
       fullWidth
       variant="contained"
       color="primary"

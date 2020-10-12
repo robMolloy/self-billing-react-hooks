@@ -1,10 +1,7 @@
-// import React, { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
-import ContactSubForm from "../contact/ContactSubForm";
 
 import GridButton from "../custom/GridButton";
 import GridItem from "../custom/GridItem";
@@ -12,6 +9,33 @@ import MainContainer from "../custom/MainContainer";
 import Form from "../custom/Form";
 import GridInput from "../custom/GridInput";
 import GridContainer from "../custom/GridContainer";
+
+import { contactMethods, contactTypes } from "../../contexts/options";
+import { ucFirst } from "../../user_modules/StringManipulation";
+import GridSelect from "../custom/GridSelect";
+import { v4 as uuid } from "uuid";
+
+import useContactReducer from "../../custom_hooks/useContactReducer";
+import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
+
+// import { CustomerContext } from "../../contexts/CustomerContext";
+// import { ContactContext } from "../../contexts/ContactContext";
+// import React, { useState, useContext } from "react";
+// import { ContactsOnCustomerContext } from "../../contexts/ContactsOnCustomerContext";
+
+// import ContactSubForm from "../contact/ContactSubForm";
+
+// import React, { useState } from "react";
+// import React from "react";
+// import { useForm } from "react-hook-form";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import * as yup from "yup";
+// import GridInput from "../custom/GridInput";
+// import GridButton from "../custom/GridButton";
+// import GridContainer from "../custom/GridContainer";
+
+// import React from "react";
+// import { contactBlankRow } from "../../object_info/blankRows";
 
 const schema = yup.object().shape({
   cus_first_name: yup
@@ -24,22 +48,44 @@ const schema = yup.object().shape({
     .required("Last name is a required field"),
 });
 
-// defaultValues: {
-//   cus_first_name: data.cus_first_name,
-//   cus_last_name: data.cus_last_name,
-// },
+const CustomerForm = ({ contacts, ...props }) => {
+  contacts = contacts === undefined ? {} : contacts;
 
-const CustomerForm = () => {
-  const { register, handleSubmit, errors } = useForm({
+  const { addCustomer } = useCustomerReducer();
+  const { addContacts } = useContactReducer();
+
+  const {
+    register,
+    handleSubmit,
+    errors,
+    watch,
+    setValue,
+    getValues,
+  } = useForm({
+    defaultValues: { cus_first_name: "", cus_last_name: "" },
     mode: "onChange",
     resolver: yupResolver(schema),
   });
 
-  // const [contactRows, setContactRows] = useState([]);
+  const cus_first_name = watch("cus_first_name");
+  const cus_last_name = watch("cus_last_name");
 
-  const onSubmit = (data) => {
-    // console.log(contactRows);
-    // console.log(data);
+  const con_type = watch("con_type");
+
+  let showContactForm =
+    !!cus_first_name &&
+    !!cus_last_name &&
+    !errors.cus_first_name &&
+    !errors.cus_last_name;
+
+  let [contactsState, setContactsState] = useState(contacts);
+
+  const onSubmit = (data, blah) => {
+    const id = uuid();
+    const { cus_first_name, cus_last_name } = data;
+
+    addCustomer({ id, cus_first_name, cus_last_name });
+    addContacts(contactsState, id);
   };
 
   return (
@@ -51,21 +97,94 @@ const CustomerForm = () => {
             ref={register}
             name="cus_first_name"
             label="First Name"
+            autoFocus
             error={!!errors.cus_first_name}
             helperText={errors?.cus_first_name?.message}
           />
           <GridInput
-            grid={{ xs: 12 }}
             ref={register}
             name="cus_last_name"
             label="Last Name"
             error={!!errors.cus_last_name}
             helperText={errors?.cus_last_name?.message}
           />
-          <GridItem xs={12}>
-            <ContactSubForm />
-          </GridItem>
-          <GridButton grid={{ xs: 12 }}>Submit</GridButton>
+          {showContactForm && (
+            <>
+              <GridItem>Contacts</GridItem>
+
+              <GridSelect
+                grid={{ xs: 6, sm: 2 }}
+                inputRef={register}
+                defaultValue=""
+                name="con_type"
+                label="Type"
+                required
+              >
+                <option disabled value={""}></option>
+                {contactTypes.map((contactType) => (
+                  <option key={contactType} value={contactType}>
+                    {ucFirst(contactType)}
+                  </option>
+                ))}
+              </GridSelect>
+
+              <GridSelect
+                grid={{ xs: 6, sm: 2 }}
+                inputRef={register}
+                name="con_method"
+                defaultValue=""
+                label="Method"
+                required
+              >
+                <option disabled value={""}></option>
+                {(contactMethods[con_type] ? contactMethods[con_type] : []).map(
+                  (contactMethod) => (
+                    <option key={contactMethod} value={contactMethod}>
+                      {ucFirst(contactMethod)}
+                    </option>
+                  )
+                )}
+              </GridSelect>
+
+              <GridInput
+                grid={{ xs: 9, sm: 5 }}
+                ref={register}
+                defaultValue=""
+                name="con_address"
+                label="Address"
+                required
+              />
+              <GridButton
+                grid={{ xs: 3 }}
+                variant="outlined"
+                onClick={() => {
+                  let data = getValues();
+
+                  let newContact = {
+                    con_type: data.con_type,
+                    con_method: data.con_method,
+                    con_address: data.con_address,
+                  };
+
+                  setContactsState({ ...contactsState, [uuid()]: newContact });
+
+                  setValue("con_type", "");
+                  setValue("con_method", "");
+                  setValue("con_address", "");
+                }}
+              >
+                +
+              </GridButton>
+            </>
+          )}
+          {Object.values(contactsState).map((contact) => (
+            <React.Fragment key={uuid()}>
+              <GridItem xs={4}>{contact.con_type}</GridItem>
+              <GridItem xs={4}>{contact.con_method}</GridItem>
+              <GridItem xs={4}>{contact.con_address}</GridItem>
+            </React.Fragment>
+          ))}
+          <GridButton type="submit">Submit</GridButton>
         </GridContainer>
       </Form>
     </MainContainer>
@@ -73,120 +192,3 @@ const CustomerForm = () => {
 };
 
 export default CustomerForm;
-
-//   <div>
-//   {Object.entries(contact_sub_forms).map((entry) => {
-//     const temp_id = entry[0];
-//     const contact = entry[1];
-//     return (
-//       <div key={temp_id} className="flex1 flexGap ac">
-//         <ContactSubForm contact={contact} />
-//         <div onClick={() => removeContactSubForm(temp_id)}>X</div>
-//       </div>
-//     );
-//   })}
-// </div>
-/*
-
-import React, { useState } from "react";
-import { v4 as uuid } from "uuid";
-import { useForm } from "react-hook-form";
-import valid9 from "valid9";
-import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
-import ContactSubForm from "../contact/ContactSubForm";
-import { contactBlankRow, customerBlankRow } from "../../object_info/blankRows";
-import { TextField, Container } from "@material-ui/core";
-import Input from "../custom/Input";
-// import { Select, Input, TextField, Container } from "@material-ui/core";
-
-const { getAllInvalid, toggleClassIfInvalid } = valid9;
-
-const CustomerForm = (props) => {
-  const blankContact = { [uuid()]: contactBlankRow };
-
-  let { customer, contacts } = props;
-  customer = props.customer === undefined ? customerBlankRow : props.customer;
-  contacts = props.contacts === undefined ? blankContact : props.contacts;
-
-  const { addCustomerAndContactsUsingInputs } = useCustomerReducer();
-
-  const { register, handleSubmit } = useForm();
-
-  const [contact_sub_forms, setContactSubForms] = useState(contacts);
-
-  const addContactSubForm = () => {
-    setContactSubForms({ ...contact_sub_forms, ...blankContact });
-  };
-
-  const removeContactSubForm = (temp_id) => {
-    let temp_contact_sub_forms = { ...contact_sub_forms };
-    delete temp_contact_sub_forms[temp_id];
-    setContactSubForms(temp_contact_sub_forms);
-  };
-
-  const onSubmit = (inputs, data) => {
-    const invalidInputs = getAllInvalid(inputs);
-    const valid = invalidInputs.length === 0;
-
-    if (valid) {
-      addCustomerAndContactsUsingInputs(inputs);
-      Array.from(inputs).forEach((input) => (input.value = ""));
-      setContactSubForms({ [uuid]: contactBlankRow });
-    }
-    (valid ? inputs : invalidInputs)[0].focus();
-  };
-
-  return (
-    <Container maxWidth="sm">
-      <form
-        className="container"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const inputs = e.target.elements;
-          handleSubmit(onSubmit.bind(this, inputs))();
-        }}
-      >
-        <TextField
-          fullWidth={true}
-          type="text"
-          name="cus_first_name"
-          label="cus_first_name"
-          defaultValue={customer.cus_first_name}
-          required
-          autoFocus
-        />
-
-        <TextField
-          type="text"
-          name="cus_last_name"
-          label="cus_last_name"
-          ref={register({ required: true, minLength: 2 })}
-          checks="minChars_2"
-          defaultValue={customer.cus_last_name}
-          required
-        />
-        <div className="singleColumn">
-          {Object.entries(contact_sub_forms).map((entry) => {
-            const temp_id = entry[0];
-            const contact = entry[1];
-            return (
-              <div key={temp_id} className="flex1 flexGap ac">
-                <ContactSubForm contact={contact} />
-                <div onClick={() => removeContactSubForm(temp_id)}>X</div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div>
-          <input type="button" onClick={() => addContactSubForm()} value="+" />
-          <div className="flex1"></div>
-          <button type="submit">Add</button>
-        </div>
-      </form>
-    </Container>
-  );
-};
-
-export default CustomerForm;
-*/

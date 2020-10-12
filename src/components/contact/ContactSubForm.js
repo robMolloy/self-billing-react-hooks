@@ -1,23 +1,9 @@
-// import React, { useState } from "react";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
-import { contactMethods, contactTypes } from "../../contexts/options";
-import { ucFirst } from "../../user_modules/StringManipulation";
-import GridInput from "../custom/GridInput";
-import GridSelect from "../custom/GridSelect";
-import GridContainer from "../custom/GridContainer";
-
-import { contactBlankRow } from "../../object_info/blankRows";
-
 const schema = yup.object().shape({
   con_name: yup.string().required("Contact name is a required field"),
   con_address: yup.string().required("Contact address is a required field"),
 });
 
-const ContactSubForm = ({ contact, ...props }) => {
+const ContactSubForm = ({ contacts, ...props }) => {
   // const { register, watch, handleSubmit, errors } = useForm({
   const { register, watch } = useForm({
     mode: "onChange",
@@ -26,14 +12,14 @@ const ContactSubForm = ({ contact, ...props }) => {
 
   const con_type = watch("con_type");
 
-  contact = contact === undefined ? contactBlankRow : contact;
+  contacts = contacts === undefined ? { [uuid()]: contactBlankRow } : contacts;
 
   return (
     <GridContainer>
       <GridSelect
-        grid={{ xs: 6 }}
+        grid={{ xs: 6, sm: 2 }}
         inputRef={register}
-        defaultValue={contact.con_type}
+        defaultValue=""
         name="con_type"
         label="Type"
         required
@@ -47,9 +33,9 @@ const ContactSubForm = ({ contact, ...props }) => {
       </GridSelect>
 
       <GridSelect
-        grid={{ xs: 6 }}
+        grid={{ xs: 6, sm: 2 }}
         name="con_method"
-        defaultValue={contact.con_method}
+        defaultValue=""
         label="Method"
         required
       >
@@ -64,13 +50,16 @@ const ContactSubForm = ({ contact, ...props }) => {
       </GridSelect>
 
       <GridInput
-        grid={{ xs: 12 }}
+        grid={{ xs: 9, sm: 5 }}
         ref={register}
-        defaultValue={contact.con_address}
+        defaultValue=""
         name="con_address"
         label="Address"
         required
       />
+      <GridButton grid={{ xs: 3 }} variant="outlined">
+        +
+      </GridButton>
     </GridContainer>
   );
 };

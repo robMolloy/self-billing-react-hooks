@@ -4,5 +4,6 @@ export const contactTypes = ["phone", "email"];
 
 export const contactMethods = {
   phone: ["whatsapp", "sms", "call"],
+
   email: ["email"],
 };
