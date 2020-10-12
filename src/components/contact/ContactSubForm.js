@@ -129,11 +129,6 @@ const CustomerForm = ({ contacts, contactsState, setContactsState }) => {
 
             reset();
           }
-
-          // const inputFocus = errorKeys[0] ? errorKeys[0] : "con_type";
-          // console.log(inputFocus);
-
-          // document.querySelector(`[name = "${inputFocus}"]`).focus();
         }}
       >
         +
