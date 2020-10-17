@@ -10,13 +10,18 @@ const CustomersOnProjectContextProvider = (props) => {
   const { customers } = useContext(CustomerContext);
   const { prjCusLinks } = useContext(PrjCusLinkContext);
 
+  const projectArray = Object.values(projects);
+  const prjCusLinksArray = Object.values(prjCusLinks);
+
   const customersOnProjects = {};
-  Object.values(projects).forEach(
-    (project) => (customersOnProjects[project.id] = [])
-  );
-  Object.values(prjCusLinks).forEach((prjCusLink) => {
+
+  projectArray.forEach((project) => (customersOnProjects[project.id] = []));
+
+  prjCusLinksArray.forEach((prjCusLink) => {
     const customer = customers[prjCusLink.pcl_cus_id];
-    customersOnProjects[prjCusLink.pcl_prj_id].push(customer);
+    const customersOnProject = customersOnProjects[prjCusLink.pcl_prj_id];
+
+    if (Array.isArray(customersOnProject)) customersOnProject.push(customer);
   });
 
   return (

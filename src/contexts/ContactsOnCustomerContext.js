@@ -17,7 +17,9 @@ const ContactsOnCustomerContextProvider = (props) => {
 
   contactArray.forEach((contact) => {
     const customerId = contact.con_cus_id;
-    contactsOnCustomers[customerId].push(contact);
+    const contactsOnCustomer = contactsOnCustomers[customerId];
+
+    if (Array.isArray(contactsOnCustomer)) contactsOnCustomer.push(contact);
   });
 
   return (
