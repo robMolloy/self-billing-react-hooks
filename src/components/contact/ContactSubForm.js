@@ -9,6 +9,7 @@ import EditIcon from "../customIcons/EditIcon";
 import GridButton from "../customComponents/GridButton";
 import GridItem from "../customComponents/GridItem";
 import GridInput from "../customComponents/GridInput";
+import Input from "../customComponents/Input";
 
 import { contactMethods, contactTypes } from "../../contexts/options";
 import { ucFirst } from "../../user_modules/StringManipulation";
@@ -40,7 +41,12 @@ const schema = yup.object().shape({
 
 const ContactSubForm = (props) => {
   let contact, contactsState, setContactsState;
-  ({ contact, contactsState, setContactsState, ...props } = props);
+  ({
+    contact = { con_type: "phone" },
+    contactsState,
+    setContactsState,
+    ...props
+  } = props);
 
   const uF = useForm({
     defaultValues: contact,
@@ -50,15 +56,11 @@ const ContactSubForm = (props) => {
   const { register, watch, getValues, errors, trigger, setValue, reset } = uF;
 
   const con_type = watch("con_type");
+  const con_address = watch("con_address");
 
   const editContactFromStateInForm = async (id) => {
     const contact = contactsState[id];
-    // const params = { shouldDirty: true };
-
-    // await setValue("con_type", contact.con_type, params);
-    // setValue("con_method", contact.con_method, params);
-    // setValue(`con_address_${contact.con_type}`, contact.con_address, params);
-    reset(contact);
+    reset();
     deleteContactFromState(contact.id);
   };
 
@@ -72,11 +74,16 @@ const ContactSubForm = (props) => {
       const con_address = addressValues[`con_address_${con_type}`];
       let newContact = { id, con_type, con_method, con_address };
       setContactsState({ ...contactsState, [id]: newContact });
-
-      setValue("con_type", " ");
-      setValue("con_method", " ");
-      setValue("con_address", "");
+      resetForm();
     }
+  };
+
+  const resetForm = () => {
+    setValue("con_type", "phone");
+    setValue("con_method", " ");
+    setValue("con_address", "");
+    setValue("con_address_phone", "");
+    setValue("con_address_address", "");
   };
 
   const ifEnter = (e, func) => {
@@ -106,6 +113,7 @@ const ContactSubForm = (props) => {
         grid={{ xs: 6, sm: 3 }}
         label="Type"
         {...rhfProps({ name: "con_type", register, errors })}
+        option1=""
       >
         {contactTypes.map((value) => (
           <option {...{ key: value, value }}>{ucFirst(value)}</option>
@@ -122,26 +130,29 @@ const ContactSubForm = (props) => {
           )
         )}
       </GridSelect>
-      {(con_type === undefined || con_type.trim() === "") && (
-        <GridInput
-          {...addressProps({ name: "con_address", register, errors })}
-          label="Address"
-        />
-      )}
+      <Input
+        {...addressProps({ name: "con_address", register, errors })}
+        style={{ display: "none" }}
+        label="Address"
+      />
 
       {con_type === "phone" && (
         <GridInput
           {...addressProps({ name: "con_address_phone", register, errors })}
           label="Phone Number"
-          onChange={(e) =>
-            (e.target.value = normalizePhoneNumber(e.target.value))
-          }
+          onChange={(e) => {
+            e.target.value = normalizePhoneNumber(e.target.value);
+            setValue("con_address", e.target.value);
+          }}
+          defaultValue={con_address}
         />
       )}
       {con_type === "email" && (
         <GridInput
           {...addressProps({ name: "con_address_email", register, errors })}
           label="Email Address"
+          onChange={(e) => setValue("con_address", e.target.value)}
+          defaultValue={con_address}
         />
       )}
 
