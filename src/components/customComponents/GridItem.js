@@ -3,7 +3,7 @@ import MUIGrid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
-  grid: { padding: "0px" },
+  grid: { padding: "0px", fontFamily: theme.typography.fontFamily },
 }));
 
 const GridItem = ({ xs, children, ...props }) => {

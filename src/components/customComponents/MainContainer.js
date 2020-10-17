@@ -17,7 +17,7 @@ const MainContainer = ({ children, ...props }) => {
   return (
     <Container
       component="main"
-      maxWidth="xs"
+      maxWidth="sm"
       {...props}
       className={styles.root}
     >

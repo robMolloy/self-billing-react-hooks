@@ -12,19 +12,14 @@ import navItems from "./navItems";
 import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles(({ headerHeight, ...theme }) => {
-  headerHeight = headerHeight === undefined ? "48px" : headerHeight;
+  headerHeight = headerHeight === undefined ? "60px" : headerHeight;
 
   return {
     root: { flexGrow: 1 },
-
     toolbar: { maxHeight: headerHeight },
-
     menuButton: { marginRight: theme.spacing(2) },
-
     title: { flexGrow: 1 },
-
     tabs: { maxHeight: headerHeight },
-
     placeholder: { maxHeight: headerHeight, minHeight: headerHeight },
   };
 });
@@ -38,7 +33,7 @@ export default function NavBar() {
 
   return (
     <>
-      <AppBar>
+      <AppBar color="primary">
         <Toolbar variant="dense" className={classes.toolbar}>
           <Box display={{ xs: "flex", [mobileWidth]: "none" }}>
             <IconButton

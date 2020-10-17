@@ -1,9 +1,11 @@
-import { createMuiTheme } from "@material-ui/core/styles";
-import { blue, orange, red } from "@material-ui/core/colors";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import primary from "@material-ui/core/colors/deepOrange";
+import secondary from "@material-ui/core/colors/blue";
+import danger from "@material-ui/core/colors/red";
 
 const theme = createMuiTheme({
-  palette: { primary: blue, secondary: orange, contrast: { main: "#ffffff" } },
-  status: { danger: red },
+  palette: { primary, secondary },
+  status: { danger },
   headerHeight: "60px",
 });
 

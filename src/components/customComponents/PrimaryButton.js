@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
-  button: { height: "56px" },
+  button: { height: "56px", borderWidth: "medium" },
 }));
 
 const PrimaryButton = ({ children, ...props }) => {

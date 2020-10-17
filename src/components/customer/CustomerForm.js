@@ -4,17 +4,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "yup-phone";
 
-import GridButton from "../custom/GridButton";
-import MainContainer from "../custom/MainContainer";
-import Form from "../custom/Form";
-import GridInput from "../custom/GridInput";
-import GridContainer from "../custom/GridContainer";
+import GridButton from "../customComponents/GridButton";
+import MainContainer from "../customComponents/MainContainer";
+import Form from "../customComponents/Form";
+import GridInput from "../customComponents/GridInput";
+import GridContainer from "../customComponents/GridContainer";
 import ContactSubForm from "../contact/ContactSubForm";
 
 import { v4 as uuid } from "uuid";
 
 import useContactReducer from "../../custom_hooks/useContactReducer";
 import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
+
+import rhfProps from "../../user_modules/rhfProps";
 
 const schema = yup.object().shape({
   cus_first_name: yup
@@ -27,17 +29,16 @@ const schema = yup.object().shape({
     .required("Last name is a required field"),
 });
 
-const CustomerForm = ({ contacts, ...props }) => {
-  contacts = contacts === undefined ? {} : contacts;
-
+const CustomerForm = ({
+  contacts = {},
+  customer = { cus_first_name: "", cus_last_name: "" },
+  ...props
+}) => {
   const { addCustomer } = useCustomerReducer();
   const { addContacts } = useContactReducer();
 
-  // setValue,
-  // getValues,
-
-  const { register, handleSubmit, errors } = useForm({
-    defaultValues: { cus_first_name: "", cus_last_name: "" },
+  const { register, handleSubmit, errors, reset } = useForm({
+    defaultValues: customer,
     mode: "onChange",
     resolver: yupResolver(schema),
   });
@@ -50,37 +51,32 @@ const CustomerForm = ({ contacts, ...props }) => {
 
     addCustomer({ id, cus_first_name, cus_last_name });
     addContacts(contactsState, id);
+
+    reset();
+    setContactsState({});
   };
 
   return (
-    <>
-      <MainContainer maxWidth="sm">
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <GridContainer>
-            <GridInput
-              grid={{ xs: 12 }}
-              inputRef={register}
-              name="cus_first_name"
-              label="First Name"
-              autoFocus
-              error={!!errors.cus_first_name}
-              helperText={errors?.cus_first_name?.message}
-            />
-            <GridInput
-              inputRef={register}
-              name="cus_last_name"
-              label="Last Name"
-              error={!!errors.cus_last_name}
-              helperText={errors?.cus_last_name?.message}
-            />
+    <MainContainer>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <GridContainer>
+          <GridInput
+            autoFocus
+            label="First Name"
+            {...rhfProps({ name: "cus_first_name", register, errors })}
+          />
+          <GridInput
+            label="Last Name"
+            {...rhfProps({ name: "cus_last_name", register, errors })}
+          />
 
-            <ContactSubForm {...{ contactsState, setContactsState }} />
+          <ContactSubForm {...{ contactsState, setContactsState }} />
 
-            <GridButton type="submit">Submit</GridButton>
-          </GridContainer>
-        </Form>
-      </MainContainer>
-    </>
+          <GridButton type="submit">Submit</GridButton>
+          <GridButton type="reset">Reset</GridButton>
+        </GridContainer>
+      </Form>
+    </MainContainer>
   );
 };
 

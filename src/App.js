@@ -10,6 +10,7 @@ import NavBar from "./components/Nav/NavBar";
 
 function App() {
   let HomePage = CustomerPage;
+
   return (
     <Router>
       <div className="App">

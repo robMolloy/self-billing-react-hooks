@@ -1,37 +1,49 @@
-import React, { useContext } from "react";
-import { CustomerContext } from "../../contexts/CustomerContext";
-import { ContactContext } from "../../contexts/ContactContext";
-import { ContactsOnCustomerContext } from "../../contexts/ContactsOnCustomerContext";
+import React from "react";
+
+import Accordian from "../customComponents/Accordian";
+import GridContainer from "../customComponents/GridContainer";
+import GridItem from "../customComponents/GridItem";
+
+import DeleteIcon from "../customIcons/DeleteIcon";
+import EditIcon from "../customIcons/EditIcon";
+import ContactIcon from "../customIcons/ContactIcon";
+
+import Typography from "@material-ui/core/Typography";
+import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
 
 const CustomerDetails = ({ customer, customerContacts }) => {
-  const { dispatch: dispatchCustomer } = useContext(CustomerContext);
-  const { dispatch: dispatchContact } = useContext(ContactContext);
-  const { contactsOnCustomers } = useContext(ContactsOnCustomerContext);
-
-  const removeCustomer = (id) => {
-    const customerContacts = contactsOnCustomers[id];
-    customerContacts.forEach((contact) => {
-      dispatchContact({ type: "REMOVE_CONTACT", id: contact.id });
-    });
-    dispatchCustomer({ type: "REMOVE_CUSTOMER", id });
-  };
+  const { removeCustomerDialogue } = useCustomerReducer();
 
   return (
-    <div className="panel" onClick={() => removeCustomer(customer.id)}>
-      <div className="jc">
-        {customer.cus_first_name} {customer.cus_last_name}
-      </div>
-
-      {customerContacts.map((contact) => (
-        <div key={contact.id}>
-          <div>
-            {contact.con_type}{" "}
-            {contact.con_type === "phone" ? `(${contact.con_method})` : ""}
-          </div>
-          <div className="jr flex1">{contact.con_address}</div>
-        </div>
-      ))}
-    </div>
+    <Accordian
+      summary={
+        <>
+          <Typography style={{ flex: 1 }}>
+            {customer.cus_first_name} {customer.cus_last_name}
+          </Typography>
+          <Typography>{customerContacts.length}</Typography>
+          <ContactIcon />
+        </>
+      }
+    >
+      <GridContainer>
+        {customerContacts.map((contact) => (
+          <React.Fragment key={contact.id}>
+            <GridItem xs={3}>{contact.con_type} </GridItem>
+            <GridItem xs={3}>{contact.con_method}</GridItem>
+            <GridItem xs={4}>{contact.con_address}</GridItem>
+            <GridItem xs={2}></GridItem>
+          </React.Fragment>
+        ))}
+        <GridItem xs={10}></GridItem>
+        <GridItem xs={1}>
+          <EditIcon onClick={() => {}} />
+        </GridItem>
+        <GridItem xs={1}>
+          <DeleteIcon onClick={() => removeCustomerDialogue(customer.id)} />
+        </GridItem>
+      </GridContainer>
+    </Accordian>
   );
 };
 
