@@ -8,6 +8,7 @@ const useContactReducer = (id) => {
   const addContact = (contact) => dispatch({ type: "ADD_CONTACT", contact });
 
   const addContacts = (contacts, customerId) => {
+    console.log(contacts);
     Object.entries(contacts).forEach((contactEntry) => {
       let contact = contactEntry[1];
 

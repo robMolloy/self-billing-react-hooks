@@ -53,37 +53,39 @@ const ContactSubForm = (props) => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  const { register, watch, getValues, errors, trigger, setValue, reset } = uF;
+  const { register, watch, getValues, errors, trigger, setValue } = uF;
 
   const con_type = watch("con_type");
   const con_address = watch("con_address");
 
-  const editContactFromStateInForm = async (id) => {
-    const contact = contactsState[id];
-    reset();
+  const editContactFromStateInForm = async (contact) => {
+    resetForm(contact);
+    await trigger();
     deleteContactFromState(contact.id);
   };
 
-  const addContactToStateFromForm = async () => {
+  const addContactToStateFromForm = async ({ id = uuid(), con_cus_id }) => {
     await trigger();
     const valid = Object.keys(errors).length === 0;
+    console.log(errors);
 
     if (valid) {
-      const id = uuid();
+      // const id = uuid();
       const { con_type, con_method, ...addressValues } = getValues();
       const con_address = addressValues[`con_address_${con_type}`];
-      let newContact = { id, con_type, con_method, con_address };
+      let newContact = { id, con_type, con_method, con_address, con_cus_id };
       setContactsState({ ...contactsState, [id]: newContact });
       resetForm();
     }
   };
 
-  const resetForm = () => {
-    setValue("con_type", "phone");
-    setValue("con_method", " ");
-    setValue("con_address", "");
-    setValue("con_address_phone", "");
-    setValue("con_address_address", "");
+  const resetForm = (contact = {}) => {
+    const { con_type = "phone", con_method = " ", con_address = "" } = contact;
+    setValue("con_type", con_type);
+    setValue("con_method", con_method);
+    setValue("con_address", con_address);
+    setValue("con_address_phone", con_address);
+    setValue("con_address_address", con_address);
   };
 
   const ifEnter = (e, func) => {
@@ -106,6 +108,9 @@ const ContactSubForm = (props) => {
     };
   };
 
+  const conTypeMethods =
+    contactMethods[con_type] === undefined ? [] : contactMethods[con_type];
+
   return (
     <>
       <GridItem>Contacts</GridItem>
@@ -124,20 +129,31 @@ const ContactSubForm = (props) => {
         label="Method"
         {...rhfProps({ name: "con_method", register, errors })}
       >
-        {(contactMethods[con_type] ? contactMethods[con_type] : []).map(
-          (value) => (
-            <option {...{ key: value, value }}>{ucFirst(value)}</option>
-          )
-        )}
+        {conTypeMethods.map((value) => (
+          <option {...{ key: value, value }}>{ucFirst(value)}</option>
+        ))}
       </GridSelect>
-      <Input
-        {...addressProps({ name: "con_address", register, errors })}
-        style={{ display: "none" }}
-        label="Address"
+      <GridInput
+        grid={{ xs: 10, sm: 4 }}
+        onChange={(e) => {
+          const value = e.target.value;
+          const params = { shouldValidate: true };
+          setValue(`con_address_${con_type}`, value, params);
+          console.log(errors);
+        }}
+        onKeyDown={(e) =>
+          ifEnter(e, addContactToStateFromForm.bind(this, contact))
+        }
+        name="con_address"
+        label={ucFirst(con_type)}
+        inputRef={register}
+        error={!!errors[`con_address_${con_type}`]}
+        helperText={errors?.[`con_address_${con_type}`]?.message}
       />
 
       {con_type === "phone" && (
-        <GridInput
+        <Input
+          style={{ display: "none" }}
           {...addressProps({ name: "con_address_phone", register, errors })}
           label="Phone Number"
           onChange={(e) => {
@@ -148,7 +164,8 @@ const ContactSubForm = (props) => {
         />
       )}
       {con_type === "email" && (
-        <GridInput
+        <Input
+          style={{ display: "none" }}
           {...addressProps({ name: "con_address_email", register, errors })}
           label="Email Address"
           onChange={(e) => setValue("con_address", e.target.value)}
@@ -159,7 +176,7 @@ const ContactSubForm = (props) => {
       <GridButton
         grid={{ xs: 2 }}
         variant="outlined"
-        onClick={() => addContactToStateFromForm()}
+        onClick={() => addContactToStateFromForm(contact)}
       >
         +
       </GridButton>
@@ -169,10 +186,7 @@ const ContactSubForm = (props) => {
           <GridItem xs={3}>{contact.con_type}</GridItem>
           <GridItem xs={3}>{contact.con_method}</GridItem>
           <GridItem xs={4}>{contact.con_address}</GridItem>
-          <GridItem
-            xs={1}
-            onClick={() => editContactFromStateInForm(contact.id)}
-          >
+          <GridItem xs={1} onClick={() => editContactFromStateInForm(contact)}>
             <EditIcon />
           </GridItem>
           <GridItem xs={1} onClick={() => deleteContactFromState(contact.id)}>

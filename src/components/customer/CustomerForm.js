@@ -29,7 +29,15 @@ const schema = yup.object().shape({
     .required("Last name is a required field"),
 });
 
-const CustomerForm = ({ contacts = {}, customer = {}, ...props }) => {
+const CustomerForm = ({
+  contacts = {},
+  customer = {},
+  setModalCustomer,
+  ...props
+}) => {
+  const exists = customer.id !== undefined;
+  const { id = uuid() } = customer;
+
   const { addCustomer } = useCustomerReducer();
   const { addContacts } = useContactReducer();
 
@@ -42,13 +50,16 @@ const CustomerForm = ({ contacts = {}, customer = {}, ...props }) => {
   let [contactsState, setContactsState] = useState(contacts);
 
   const onSubmit = (data, e) => {
-    const id = uuid();
     const { cus_first_name, cus_last_name } = data;
 
     addCustomer({ id, cus_first_name, cus_last_name });
     addContacts(contactsState, id);
 
-    reset();
+    if (exists) {
+      setModalCustomer(undefined);
+    } else {
+      reset();
+    }
 
     setContactsState({});
   };

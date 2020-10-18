@@ -11,8 +11,14 @@ import ContactIcon from "../customIcons/ContactIcon";
 import Typography from "@material-ui/core/Typography";
 import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
 
-const CustomerDetails = ({ customer, customerContacts }) => {
+const CustomerDetails = ({
+  customer,
+  customerContacts,
+  setModalCustomer,
+  setModalContacts,
+}) => {
   const { removeCustomerDialogue } = useCustomerReducer();
+  const customerContactsArray = Object.values(customerContacts);
 
   return (
     <Accordian
@@ -21,13 +27,13 @@ const CustomerDetails = ({ customer, customerContacts }) => {
           <Typography style={{ flex: 1 }}>
             {customer.cus_first_name} {customer.cus_last_name}
           </Typography>
-          <Typography>{customerContacts.length}</Typography>
+          <Typography>{customerContactsArray.length}</Typography>
           <ContactIcon />
         </>
       }
     >
       <GridContainer>
-        {customerContacts.map((contact) => (
+        {customerContactsArray.map((contact) => (
           <React.Fragment key={contact.id}>
             <GridItem xs={3}>{contact.con_type} </GridItem>
             <GridItem xs={3}>{contact.con_method}</GridItem>
@@ -37,7 +43,12 @@ const CustomerDetails = ({ customer, customerContacts }) => {
         ))}
         <GridItem xs={10}></GridItem>
         <GridItem xs={1}>
-          <EditIcon onClick={() => {}} />
+          <EditIcon
+            onClick={() => {
+              setModalCustomer(customer);
+              setModalContacts(customerContacts);
+            }}
+          />
         </GridItem>
         <GridItem xs={1}>
           <DeleteIcon onClick={() => removeCustomerDialogue(customer.id)} />

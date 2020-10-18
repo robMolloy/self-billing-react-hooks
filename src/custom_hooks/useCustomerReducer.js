@@ -14,7 +14,8 @@ const useCustomerReducer = (id) => {
 
   const removeCustomer = (id) => {
     const contacts = contactsOnCustomers[id];
-    contacts.forEach((contact) => removeContact(contact.id));
+
+    Object.values(contacts).forEach((contact) => removeContact(contact.id));
     dispatch({ type: "REMOVE_CUSTOMER", id });
   };
 
