@@ -3,16 +3,18 @@ import MUIGrid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles((theme) => ({
-  grid: { padding: "0px", fontFamily: theme.typography.fontFamily },
+  grid: {
+    padding: "0px",
+    fontFamily: theme.typography.fontFamily,
+    display: "flex",
+  },
 }));
 
-const GridItem = ({ xs, children, ...props }) => {
-  xs = xs === undefined ? 12 : xs;
-
+const GridItem = ({ xs = 12, children, ...props }) => {
   const classes = useStyles();
 
   return (
-    <MUIGrid item xs={xs} className={classes.grid} {...props}>
+    <MUIGrid item className={classes.grid} {...{ xs, ...props }}>
       {children}
     </MUIGrid>
   );

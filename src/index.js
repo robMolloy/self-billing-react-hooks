@@ -8,11 +8,13 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
+    {/* <React.StrictMode> */}
     <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
-  </React.StrictMode>,
+    {/* </React.StrictMode>, */}
+  </React.Fragment>,
   document.getElementById("root")
 );
 

@@ -43,15 +43,13 @@ const CustomerList = () => {
         })}
       </MainContainer>
       <Modal {...{ open: modalOpen, onClose }}>
-        {modalOpen && (
-          <CustomerForm
-            {...{
-              customer: modalCustomer,
-              contacts: modalContacts,
-              setModalCustomer,
-            }}
-          />
-        )}
+        <CustomerForm
+          {...{
+            defaultValues: modalCustomer,
+            contacts: modalContacts,
+            setModalCustomer,
+          }}
+        />
       </Modal>
     </>
   );

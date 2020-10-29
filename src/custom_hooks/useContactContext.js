@@ -1,15 +1,15 @@
 import { useContext } from "react";
 import { ContactContext } from "../contexts/ContactContext";
 
-const useContactReducer = (id) => {
-  const { dispatch } = useContext(ContactContext);
+const useContactContext = (id) => {
+  const contactContextReturn = useContext(ContactContext);
+  const { dispatch } = contactContextReturn;
 
   const removeContact = (id) => dispatch({ type: "REMOVE_CONTACT", id });
   const addContact = (contact) => dispatch({ type: "ADD_CONTACT", contact });
 
-  const addContacts = (contacts, customerId) => {
-    console.log(contacts);
-    Object.entries(contacts).forEach((contactEntry) => {
+  const addContacts = (newContacts, customerId) => {
+    Object.entries(newContacts).forEach((contactEntry) => {
       let contact = contactEntry[1];
 
       contact.id = contactEntry[0];
@@ -19,7 +19,7 @@ const useContactReducer = (id) => {
     });
   };
 
-  return { removeContact, addContact, addContacts };
+  return { ...contactContextReturn, removeContact, addContact, addContacts };
 };
 
-export default useContactReducer;
+export default useContactContext;

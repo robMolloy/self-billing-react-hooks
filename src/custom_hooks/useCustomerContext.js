@@ -1,16 +1,17 @@
 import { useContext } from "react";
 import { CustomerContext } from "../contexts/CustomerContext";
 import { ContactsOnCustomerContext } from "../contexts/ContactsOnCustomerContext";
-import useContactReducer from "../custom_hooks/useContactReducer";
+import useContactContext from "./useContactContext";
 import Swal from "sweetalert2";
 
-const useCustomerReducer = (id) => {
-  const { dispatch } = useContext(CustomerContext);
-  // const { dispatch: dispatchContact } = useContext(ContactContext);
-  const { contactsOnCustomers } = useContext(ContactsOnCustomerContext);
-  // const { addContact } = useContactReducer();
+const useCustomerContext = (id) => {
+  const customerContextReturn = useContext(CustomerContext);
+  const { dispatch } = customerContextReturn;
 
-  const { removeContact } = useContactReducer();
+  const contactsOnCustomerContextReturn = useContext(ContactsOnCustomerContext);
+  const { contactsOnCustomers } = contactsOnCustomerContextReturn;
+
+  const { removeContact } = useContactContext();
 
   const removeCustomer = (id) => {
     const contacts = contactsOnCustomers[id];
@@ -37,7 +38,12 @@ const useCustomerReducer = (id) => {
     dispatch({ type: "ADD_CUSTOMER", customer });
   };
 
-  return { removeCustomer, removeCustomerDialogue, addCustomer };
+  return {
+    ...customerContextReturn,
+    removeCustomer,
+    removeCustomerDialogue,
+    addCustomer,
+  };
 };
 
-export default useCustomerReducer;
+export default useCustomerContext;

@@ -9,7 +9,7 @@ import EditIcon from "../customIcons/EditIcon";
 import ContactIcon from "../customIcons/ContactIcon";
 
 import Typography from "@material-ui/core/Typography";
-import useCustomerReducer from "../../custom_hooks/useCustomerReducer";
+import useCustomerReducer from "../../custom_hooks/useCustomerContext";
 
 const CustomerDetails = ({
   customer,

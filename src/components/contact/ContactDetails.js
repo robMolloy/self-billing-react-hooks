@@ -1,5 +1,5 @@
 import React from "react";
-import useContactReducer from "../../custom_hooks/useContactReducer";
+import useContactReducer from "../../custom_hooks/useContactContext";
 
 const ContactDetails = ({ contact }) => {
   const { id, con_method, con_address } = contact;

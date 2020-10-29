@@ -7,7 +7,7 @@ import normalizePhoneNumber from "../../user_modules/normalizePhoneNumber";
 // import EditIcon from "../customIcons/EditIcon";
 
 import GridItem from "../customComponents/GridItem";
-// import GridButton from "../customComponents/GridButton";
+import GridButton from "../customComponents/GridButton";
 import GridInput from "../customComponents/GridInput";
 import Input from "../customComponents/Input";
 
@@ -20,46 +20,23 @@ import rhfProps from "../../user_modules/rhfProps";
 import ifEnter from "../../user_modules/ifEnter";
 
 import ContactSchema from "./ContactSchema";
-import DeleteIcon from "../customIcons/DeleteIcon";
 
 const ContactSubForm = (props) => {
-  let contactsState,
-    // exists,
-    setContactsState,
-    contactFormsState,
-    setContactFormsState,
-    defaultValues,
-    mode,
-    resolver;
+  let contact, contactsState, setContactsState, defaultValues, mode, resolver;
 
   ({
     defaultValues = { con_type: "phone", con_method: " ", con_address: "" },
-    // exists = false,
     mode = "onChange",
     resolver = yupResolver(ContactSchema),
+    contact = {},
     contactsState,
     setContactsState,
-    contactFormsState,
-    setContactFormsState,
     ...props
   } = props);
 
-  if (defaultValues.con_type === "") {
-    defaultValues = {
-      ...defaultValues,
-      ...{ con_type: "phone", con_method: "whatsapp", con_address: "" },
-    };
-  }
-  // const exists = !!defaultValues.id;
-  const { id } = defaultValues;
-
   const uF = useForm({ defaultValues, mode, resolver });
-  const { register, watch, getValues, errors, trigger, setValue } = uF;
 
-  React.useEffect(() => {
-    contactFormsState[id] = { ...contactFormsState[id], ...uF };
-    setContactFormsState(contactFormsState);
-  });
+  const { register, watch, getValues, errors, trigger, setValue } = uF;
 
   const con_type = watch("con_type");
   const con_address = watch("con_address");
@@ -80,7 +57,6 @@ const ContactSubForm = (props) => {
 
   const resetForm = (contact = defaultValues) => {
     const { con_type = "phone", con_method = " ", con_address = "" } = contact;
-
     setValue("con_type", con_type);
     setValue("con_method", con_method);
     setValue("con_address", con_address);
@@ -96,18 +72,16 @@ const ContactSubForm = (props) => {
     };
   };
 
-  const { [con_type]: conTypeMethods = [] } = contactMethods;
+  const conTypeMethods =
+    contactMethods[con_type] === undefined ? [] : contactMethods[con_type];
 
   return (
     <>
+      <GridItem>Contacts</GridItem>
       <GridSelect
         grid={{ xs: 6, sm: 3 }}
         label="Type"
         {...rhfProps({ name: "con_type", register, errors })}
-        onChange={(e) => {
-          contactsState[id]["con_type"] = e.target.value;
-          setContactsState(contactsState);
-        }}
         option1=""
       >
         {contactTypes.map((value) => (
@@ -134,7 +108,7 @@ const ContactSubForm = (props) => {
           setValue(`con_address_${con_type}`, e.target.value, params);
         }}
         onKeyDown={(e) =>
-          ifEnter(e, addContactToStateFromForm.bind(this, defaultValues))
+          ifEnter(e, addContactToStateFromForm.bind(this, contact))
         }
         name="con_address"
         label={ucFirst(con_type)}
@@ -150,7 +124,6 @@ const ContactSubForm = (props) => {
           defaultValue={con_address}
         />
       )}
-
       {con_type === "email" && (
         <Input
           style={{ display: "none" }}
@@ -159,17 +132,13 @@ const ContactSubForm = (props) => {
         />
       )}
 
-      <GridItem
-        xs={2}
-        justify="center"
-        alignItems="center"
-        onClick={() => {
-          delete contactsState[defaultValues.id];
-          setContactsState(contactsState);
-        }}
+      <GridButton
+        grid={{ xs: 2 }}
+        variant="outlined"
+        onClick={() => addContactToStateFromForm(contact)}
       >
-        <DeleteIcon />
-      </GridItem>
+        +
+      </GridButton>
     </>
   );
 };

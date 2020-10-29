@@ -5,11 +5,11 @@ import CreateInputObject from "../../user_modules/CreateInputObject";
 import { contactMethods, contactTypes } from "../../contexts/options";
 import { ucFirst } from "../../user_modules/StringManipulation";
 import valid9 from "valid9";
-import useContactReducer from "../../custom_hooks/useContactReducer";
+import useContactContext from "../../custom_hooks/useContactContext";
 const { getAllInvalid, toggleClassIfInvalid } = valid9;
 
 const ContactForm = () => {
-  const { addContact } = useContactReducer();
+  const { addContact } = useContactContext();
   const { customers } = useContext(CustomerContext);
 
   const { register, handleSubmit, watch } = useForm();
