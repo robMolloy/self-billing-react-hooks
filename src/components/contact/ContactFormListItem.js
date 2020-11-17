@@ -32,7 +32,8 @@ const ContactSubForm = (props) => {
   const con_address = form.watch("con_address");
 
   React.useEffect(() => {
-    formListState[id] = { ...formListState[id], ...form };
+    Object.assign(formListState[id], form);
+    // formListState[id] = { ...formListState[id], ...form };
     setFormListState(formListState);
   });
 
@@ -43,7 +44,14 @@ const ContactSubForm = (props) => {
     defaultValues: contactBlankRow,
   });
 
-  const { [con_type]: conTypeMethods = [] } = contactMethods;
+  const { [con_type]: conMethods = [] } = contactMethods;
+
+  const conTypeOptions = contactTypes.map((value) => (
+    <Option {...{ key: value, value }}>{ucFirst(value)}</Option>
+  ));
+  const conMethodOptions = conMethods.map((value) => (
+    <Option {...{ key: value, value }}>{ucFirst(value)}</Option>
+  ));
 
   return (
     <>
@@ -54,20 +62,16 @@ const ContactSubForm = (props) => {
         onChange={(e) => listItem.setState("con_type", e.target.value)}
         option1=""
       >
-        {contactTypes.map((value) => (
-          <Option {...{ key: value, value }}>{ucFirst(value)}</Option>
-        ))}
+        {conTypeOptions}
       </GridSelect>
+
       <GridSelect
         grid={{ xs: 6, sm: 3 }}
         label="Method"
         {...form.fieldProps("con_method")}
         onChange={(e) => listItem.setState("con_method", e.target.value)}
-        onBlur={(e) => console.log(123)}
       >
-        {conTypeMethods.map((value) => (
-          <Option {...{ key: value, value }}>{ucFirst(value)}</Option>
-        ))}
+        {conMethodOptions}
       </GridSelect>
       <GridInput
         grid={{ xs: 10, sm: 4 }}
