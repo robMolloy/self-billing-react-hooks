@@ -18,7 +18,7 @@ const CustomerForm = (props) => {
   values = exists ? values : customerBlankRow;
 
   React.useEffect(() => {
-    console.log("render customer form - when new object is used to set state");
+    console.log("render customer form - new object was used to set state");
 
     Object.assign(formState, { values, ...form });
     setFormState(formState);
