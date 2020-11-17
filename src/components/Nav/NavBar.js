@@ -9,6 +9,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "./Drawer";
 import navItems from "./navItems";
+import { Link } from "react-router-dom";
+
 import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles(({ headerHeight, ...theme }) => {
@@ -16,6 +18,14 @@ const useStyles = makeStyles(({ headerHeight, ...theme }) => {
 
   return {
     root: { flexGrow: 1 },
+    logo: {
+      padding: theme.spacing(2),
+      alignSelf: "stretch",
+      textTransform: "none",
+      textDecoration: "none",
+      color: theme.palette.primary.contrastText,
+      whiteSpace: "nowrap",
+    },
     toolbar: { maxHeight: headerHeight },
     menuButton: { marginRight: theme.spacing(2) },
     title: { flexGrow: 1 },
@@ -46,8 +56,10 @@ export default function NavBar() {
               <MenuIcon />
             </IconButton>
           </Box>
-          <Typography variant="h6" className={classes.title}>
-            SB
+          <Typography variant="h6">
+            <Link to={"/"} className={classes.logo}>
+              SB
+            </Link>
           </Typography>
           <Box
             display={{ xs: "none", [mobileWidth]: "flex" }}

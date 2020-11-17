@@ -1,160 +1,122 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
 
-// import DeleteIcon from "../customIcons/DeleteIcon";
-// import EditIcon from "../customIcons/EditIcon";
+import rhfListObject from "../../user_modules/rhfListObject";
 
-import GridItem from "../customComponents/GridItem";
+import { contactBlankRow } from "../../object_info/blankRows";
 
-import GridButton from "../customComponents/GridButton";
+import CustomerFormBody from "./CustomerFormBody";
+import ContactFormList from "../contact/ContactFormList";
+
 import MainContainer from "../customComponents/MainContainer";
-import Form from "../customComponents/Form";
-import GridInput from "../customComponents/GridInput";
 import GridContainer from "../customComponents/GridContainer";
-import ContactSubForm from "../contact/ContactSubForm";
-import { getBlankContacts } from "../../object_info/blankObjects";
+import GridButton from "../customComponents/GridButton";
+import GridItem from "../customComponents/GridItem";
+import Form from "../customComponents/Form";
 
-import { v4 as uuid } from "uuid";
+const CustomerForm = () => {
+  let [formState, setFormState] = React.useState({});
+  let [formListState, setFormListState] = React.useState({});
 
-import useContactContext from "../../custom_hooks/useContactContext";
-import useCustomerContext from "../../custom_hooks/useCustomerContext";
-
-import rhfProps from "../../user_modules/rhfProps";
-
-import CustomerSchema from "./CustomerSchema";
-
-const CustomerForm = (props) => {
-  let exists, contacts, setModalCustomer, defaultValues;
-
-  ({
-    exists = false,
-    defaultValues = {},
-    contacts = getBlankContacts(1),
-    setModalCustomer,
-    ...props
-  } = props);
-
-  const { id = uuid() } = defaultValues;
-
-  const { addCustomer } = useCustomerContext();
-  const { addContacts } = useContactContext();
-
-  const useCustomerForm = useForm({
-    defaultValues,
-    mode: "onChange",
-    resolver: yupResolver(CustomerSchema),
+  const list = new rhfListObject({
+    formListState,
+    setFormListState,
+    defaultValues: contactBlankRow,
   });
-  const { register, handleSubmit, errors, reset } = useCustomerForm;
-
-  let [contactsState, setContactsState] = useState(contacts);
-
-  // console.log(contacts);
-
-  let oContactFormsState = {};
-  Object.values(contacts).forEach((contact) => {
-    oContactFormsState[contact.id] = { defaultValues: contact };
-  });
-
-  let [contactFormsState, setContactFormsState] = useState(oContactFormsState);
-
-  const onSubmit = (data, e) => {
-    const { cus_first_name, cus_last_name } = data;
-
-    addCustomer({ id, cus_first_name, cus_last_name });
-    addContacts(contactsState, id);
-
-    if (exists) {
-      setModalCustomer(undefined);
-    } else {
-      reset();
-    }
-
-    setContactsState({});
-  };
-
-  // const editContactFromStateInForm = async (contact) => {
-  //   // resetForm(contact);
-  //   // await trigger();
-  //   deleteContactFromState(contact.id);
-  // };
-
-  // const deleteContactFromState = (id) => {
-  //   delete contactsState[id];
-  //   setContactsState({ ...contactsState });
-  // };
 
   return (
     <MainContainer>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(e);
+        }}
+      >
         <GridContainer>
-          <GridInput
-            autoFocus
-            label="First Name"
-            {...rhfProps({ name: "cus_first_name", register, errors })}
-          />
-          <GridInput
-            label="Last Name"
-            {...rhfProps({ name: "cus_last_name", register, errors })}
+          <CustomerFormBody {...{ formState, setFormState }} />
+
+          <GridItem
+            //  alignItems="center"
+            children="Add Contact"
           />
 
-          <GridItem alignItems="center" xs={6}>
-            Add Contact
-          </GridItem>
           <GridButton
             grid={{ xs: 2 }}
             variant="outlined"
-            onClick={() => {
-              let newContactsState = {
-                ...contactsState,
-                ...getBlankContacts(1, {
-                  con_type: "phone",
-                  con_method: "whatsapp",
-                }),
-              };
-              console.log(newContactsState);
-              setContactsState(newContactsState);
-            }}
-          >
-            +
-          </GridButton>
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => {
-              console.log(contactFormsState);
-            }}
-          >
-            log
-          </GridButton>
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => {
-              Object.values(contactFormsState).forEach((value) => {
-                value.trigger();
-              });
-              let id = Object.keys(contactFormsState)[0];
-              contactFormsState[id].trigger();
-            }}
-          >
-            trigger
-          </GridButton>
+            onClick={() => list.addItem()}
+            children="+"
+          />
 
-          {Object.values(contactsState).map((defaultValues) => {
-            return (
-              <ContactSubForm
-                {...{
-                  key: uuid(),
-                  contactsState,
-                  setContactsState,
-                  contactFormsState,
-                  setContactFormsState,
-                  defaultValues,
-                }}
-              />
-            );
-          })}
+          <GridButton
+            grid={{ xs: 2 }}
+            variant="outlined"
+            onClick={() => list.trigger()}
+            children="t"
+          />
+
+          <GridButton
+            grid={{ xs: 2 }}
+            variant="outlined"
+            onClick={async () => console.log(await formState.getValues())}
+            children="values"
+          />
+
+          <GridButton
+            grid={{ xs: 2 }}
+            variant="outlined"
+            onClick={() => list.trigger()}
+            children=" list t"
+          />
+
+          <GridButton
+            grid={{ xs: 2 }}
+            variant="outlined"
+            onClick={() => console.log(formListState)}
+            children=" log listState"
+          />
+
+          <GridButton
+            grid={{ xs: 2 }}
+            variant="outlined"
+            onClick={() => console.log(list.errors)}
+            children=" list err"
+          />
+
+          <GridButton
+            variant="outlined"
+            onClick={() => {
+              formState.trigger();
+              list.trigger();
+            }}
+            children="trigger both"
+          />
+
+          <GridButton
+            variant="outlined"
+            onClick={() => {
+              setFormState({ ...formState });
+            }}
+            children="force render"
+          />
+          <GridButton
+            variant="outlined"
+            onClick={() => {
+              Object.assign(formState, {});
+              setFormState(formState);
+            }}
+            children="copy formState"
+          />
+          <GridButton
+            variant="outlined"
+            onClick={() => console.log(formState.isErrors())}
+            children="log is errors"
+          />
+          <GridButton
+            variant="outlined"
+            onClick={async () => console.log(await formState.isValid())}
+            children="log is valid"
+          />
+
+          <ContactFormList {...{ formListState, setFormListState }} />
 
           <GridButton type="submit">Submit</GridButton>
         </GridContainer>

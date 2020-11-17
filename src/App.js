@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import CustomerPage from "./components/customer/CustomerPage";
+// import TestPage from "./components/test/TestPage";
 // import ContactPage from "./components/contact/ContactPage";
 // import PrjCusLinkPage from "./components/prj_cus_link/PrjCusLinkPage";
 // import ProjectPage from "./components/project/ProjectPage";
@@ -9,7 +10,9 @@ import CustomerPage from "./components/customer/CustomerPage";
 import NavBar from "./components/Nav/NavBar";
 
 function App() {
-  let HomePage = CustomerPage;
+  let HomePage;
+  HomePage = CustomerPage;
+  // HomePage = TestPage;
 
   return (
     <Router>
