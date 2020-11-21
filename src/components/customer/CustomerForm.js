@@ -36,41 +36,20 @@ import useContactsOnCustomerContext from "../../custom_hooks/useContactsOnCustom
 // };
 
 const CustomerForm = (props) => {
-  let contacts, customers;
-  ({ contacts = {}, customers = getBlankCustomers() } = props);
+  let contacts, customers, exists, setModalCustomer;
+  ({
+    contacts = {},
+    customers = getBlankCustomers(),
+    exists = false,
+    setModalCustomer,
+  } = props);
 
   let [state, setState] = React.useState({
     contacts: { values: contacts },
     customers: { values: customers },
   });
-  console.log(state);
 
   let { addContactsOnCustomer } = useContactsOnCustomerContext();
-
-  // let list = new rhfListObject({
-  //   setState,
-  //   setFormListState,
-  //   defaultValues: { ...contactBlankRow, con_type: "phone" },
-  // });
-
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   let valid = true;
-  //   if (!(await formState.isValid())) valid = false;
-  //   if (!(await list.isValid())) valid = false;
-
-  //   if (valid) {
-  //     const contacts = await list.getValues();
-  //     const customer = await formState.getValues();
-
-  //     addContactsOnCustomer({ contacts, customer });
-
-  //     // list reset must take place first, why ?????? - to do with render?
-  //     list.reset();
-  //     resetForm();
-  //   }
-  // };
 
   const addItem = () => {
     let contacts = state?.contacts?.values ?? {};
@@ -81,15 +60,6 @@ const CustomerForm = (props) => {
     state.contacts.values = contacts;
     setState({ ...state });
   };
-
-  // const triggerAll = (objectType) => {
-  //   return new Promise(async (resolve) => {
-  //     for (let listItem of Object.values(this.formListState)) {
-  //       await listItem.trigger();
-  //     }
-  //     resolve(true);
-  //   });
-  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -111,6 +81,7 @@ const CustomerForm = (props) => {
         customer: Object.values(state.customers.values)[0],
       });
       setState({});
+      if (exists) setModalCustomer(undefined);
     }
   };
 

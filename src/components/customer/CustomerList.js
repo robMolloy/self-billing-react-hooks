@@ -48,6 +48,7 @@ const CustomerList = () => {
               customers: modalCustomer,
               contacts: modalContacts,
               setModalCustomer,
+              exists: true,
             }}
           />
         )}
