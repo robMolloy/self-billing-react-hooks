@@ -8,12 +8,10 @@ const useContactContext = (id) => {
   const removeContact = (id) => dispatch({ type: "REMOVE_CONTACT", id });
   const addContact = (contact) => dispatch({ type: "ADD_CONTACT", contact });
 
-  const addContacts = (newContacts, customerId) => {
-    Object.entries(newContacts).forEach((contactEntry) => {
-      let contact = contactEntry[1];
-
-      contact.id = contactEntry[0];
-      contact.con_cus_id = customerId;
+  const addContacts = ({ contacts, cus_id }) => {
+    Object.entries(contacts).forEach(([id, contact]) => {
+      cus_id = cus_id === undefined ? contact.con_cus_id : cus_id;
+      contact.con_cus_id = cus_id;
 
       addContact(contact);
     });

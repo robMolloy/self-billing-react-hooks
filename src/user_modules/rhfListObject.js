@@ -30,19 +30,17 @@ class rhfListObject {
     });
   }
 
-  async valid() {
+  async isValid() {
     await this.trigger();
     return Object.keys(this.errors).length === 0;
   }
 
   trigger() {
     return new Promise(async (resolve) => {
-      // setTimeout(async () => {
       for (let listItem of Object.values(this.formListState)) {
         await listItem.trigger();
       }
       resolve(true);
-      // }, 1);
     });
   }
 
@@ -60,11 +58,11 @@ class rhfListObject {
     return rtn;
   }
 
-  get objects() {
+  getValues() {
     const objs = {};
 
     Object.entries(this.formListState).forEach(([id, object]) => {
-      objs[id] = object.values;
+      objs[id] = object.getValues();
     });
     return objs;
   }
@@ -79,6 +77,10 @@ class rhfListObject {
   removeItem(id) {
     delete this.formListState[id];
     this.setFormListState({ ...this.formListState });
+  }
+
+  reset() {
+    this.setFormListState({});
   }
 }
 export default rhfListObject;

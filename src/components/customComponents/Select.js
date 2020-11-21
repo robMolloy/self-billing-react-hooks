@@ -19,37 +19,36 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const Select = forwardRef(
-  (
-    {
-      id = uuid(),
-      variant = "outlined",
-      option1 = <option value={" "}>Select...</option>,
-      children,
-      name,
-      label,
-      helperText,
-      ...props
-    },
-    ref
-  ) => {
-    const classes = useStyles();
+const Select = forwardRef((props, ref) => {
+  let id, variant, option1, children, name, label, helperText;
 
-    return (
-      <FormControl className={classes.formControl} variant={variant}>
-        <InputLabel htmlFor={id} className={classes.label}>
-          {label}
-        </InputLabel>
-        <MUISelect native ref={ref} inputProps={{ name, id }} {...props}>
-          {option1}
-          {children}
-        </MUISelect>
-        <FormHelperText className={classes.helperText}>
-          {helperText}
-        </FormHelperText>
-      </FormControl>
-    );
-  }
-);
+  ({
+    id = uuid(),
+    variant = "outlined",
+    option1 = <option value={""}>Select...</option>,
+    children,
+    name,
+    label,
+    helperText,
+    ...props
+  } = props);
+
+  const classes = useStyles();
+
+  return (
+    <FormControl className={classes.formControl} variant={variant}>
+      <InputLabel htmlFor={id} className={classes.label}>
+        {label}
+      </InputLabel>
+      <MUISelect native ref={ref} inputProps={{ name, id }} {...props}>
+        {option1}
+        {children}
+      </MUISelect>
+      <FormHelperText className={classes.helperText}>
+        {helperText}
+      </FormHelperText>
+    </FormControl>
+  );
+});
 
 export default Select;

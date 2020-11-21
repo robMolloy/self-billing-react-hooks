@@ -18,14 +18,16 @@ const CustomerForm = (props) => {
   values = exists ? values : customerBlankRow;
 
   React.useEffect(() => {
-    console.log("render customer form - new object was used to set state");
-
+    // console.log("render customer form - new object was used to set state");
     Object.assign(formState, { values, ...form });
     setFormState(formState);
-  });
+
+    // eslint-disable-next-line
+  }, []);
 
   // give form default values and behaviour
-  const form = useForm({ defaultValues: customerBlankRow, Schema });
+  // console.log(customerBlankRow);
+  const form = useForm({ defaultValues: {}, Schema });
 
   const changeFieldState = (name, value) => {
     formState.values[name] = value;

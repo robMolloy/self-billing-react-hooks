@@ -3,6 +3,7 @@ import { CustomerContext } from "../contexts/CustomerContext";
 import { ContactsOnCustomerContext } from "../contexts/ContactsOnCustomerContext";
 import useContactContext from "./useContactContext";
 import Swal from "sweetalert2";
+import { v4 as uuid } from "uuid";
 
 const useCustomerContext = (id) => {
   const customerContextReturn = useContext(CustomerContext);
@@ -35,7 +36,10 @@ const useCustomerContext = (id) => {
   };
 
   const addCustomer = (customer) => {
+    customer.id = customer.id === undefined ? uuid() : customer.id;
+
     dispatch({ type: "ADD_CUSTOMER", customer });
+    return customer;
   };
 
   return {

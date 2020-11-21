@@ -4,6 +4,7 @@ import rhfListObject from "../../user_modules/rhfListObject";
 
 import { contactBlankRow } from "../../object_info/blankRows";
 
+// import CustomerFormControls from "./CustomerFormControls";
 import CustomerFormBody from "./CustomerFormBody";
 import ContactFormList from "../contact/ContactFormList";
 
@@ -13,28 +14,63 @@ import GridButton from "../customComponents/GridButton";
 import GridItem from "../customComponents/GridItem";
 import Form from "../customComponents/Form";
 
+import useContactsOnCustomerContext from "../../custom_hooks/useContactsOnCustomerContext";
+
 const CustomerForm = () => {
+  console.log("customer form rendser");
+
   let [formState, setFormState] = React.useState({});
   let [formListState, setFormListState] = React.useState({});
+  let [formReset, setFormReset] = React.useState(false);
 
-  const list = new rhfListObject({
+  React.useEffect(() => {
+    if (formReset) setFormReset(false);
+  }, [formReset, setFormReset]);
+
+  // React.useEffect(() => {}, [formListState, setFormListState]);
+
+  let { addContactsOnCustomer } = useContactsOnCustomerContext();
+
+  let list = new rhfListObject({
     formListState,
     setFormListState,
-    defaultValues: contactBlankRow,
+    defaultValues: { ...contactBlankRow, con_type: "phone" },
   });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    let valid = true;
+    if (!(await formState.isValid())) valid = false;
+    if (!(await list.isValid())) valid = false;
+
+    if (valid) {
+      const contacts = await list.getValues();
+      const customer = await formState.getValues();
+
+      addContactsOnCustomer({ contacts, customer });
+
+      // list reset must take place first, why ?????? - to do with render?
+      list.reset();
+      resetForm();
+    }
+  };
+
+  const resetForm = () => {
+    formState = {};
+    setFormState(formState);
+    setFormReset(true);
+  };
 
   return (
     <MainContainer>
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(e);
-        }}
-      >
+      <Form onSubmit={async (e) => onSubmit(e)}>
+        <GridContainer style={{ minHeight: "144px" }}>
+          {!formReset && <CustomerFormBody {...{ formState, setFormState }} />}
+        </GridContainer>
         <GridContainer>
-          <CustomerFormBody {...{ formState, setFormState }} />
-
           <GridItem
+            xs={10}
             //  alignItems="center"
             children="Add Contact"
           />
@@ -46,75 +82,18 @@ const CustomerForm = () => {
             children="+"
           />
 
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => list.trigger()}
-            children="t"
-          />
-
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={async () => console.log(await formState.getValues())}
-            children="values"
-          />
-
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => list.trigger()}
-            children=" list t"
-          />
-
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => console.log(formListState)}
-            children=" log listState"
-          />
-
-          <GridButton
-            grid={{ xs: 2 }}
-            variant="outlined"
-            onClick={() => console.log(list.errors)}
-            children=" list err"
-          />
-
-          <GridButton
-            variant="outlined"
-            onClick={() => {
-              formState.trigger();
-              list.trigger();
-            }}
-            children="trigger both"
-          />
-
-          <GridButton
-            variant="outlined"
-            onClick={() => {
-              setFormState({ ...formState });
-            }}
-            children="force render"
-          />
-          <GridButton
-            variant="outlined"
-            onClick={() => {
-              Object.assign(formState, {});
-              setFormState(formState);
-            }}
-            children="copy formState"
-          />
-          <GridButton
-            variant="outlined"
-            onClick={() => console.log(formState.isErrors())}
-            children="log is errors"
-          />
-          <GridButton
-            variant="outlined"
-            onClick={async () => console.log(await formState.isValid())}
-            children="log is valid"
-          />
+          {/* {true && (
+            <CustomerFormControls
+              {...{
+                formState,
+                setFormState,
+                formListState,
+                setFormListState,
+                list,
+                setFormReset,
+              }}
+            />
+          )} */}
 
           <ContactFormList {...{ formListState, setFormListState }} />
 

@@ -5,18 +5,17 @@ import ContactFormListItem from "./ContactFormListItem";
 const ContactFormList = (props) => {
   let formListState, setFormListState;
   ({ formListState, setFormListState } = props);
-  console.log();
 
-  return Object.values(formListState).map((formListItem) => (
-    <ContactFormListItem
-      {...{
-        key: uuid(),
-        values: formListItem.values,
-        formListState,
-        setFormListState,
-      }}
-    />
-  ));
+  return Object.values(formListState).map((formListItem) => {
+    const { values } = formListItem;
+    const key = uuid();
+
+    return (
+      <ContactFormListItem
+        {...{ key, values, formListState, setFormListState }}
+      />
+    );
+  });
 };
 
 export default ContactFormList;

@@ -24,7 +24,7 @@ const ContactSubForm = (props) => {
   const id = values.id;
 
   const form = useForm({
-    defaultValues: { ...values, con_type: "phone" },
+    defaultValues: { ...values },
     Schema,
   });
 
@@ -33,7 +33,6 @@ const ContactSubForm = (props) => {
 
   React.useEffect(() => {
     Object.assign(formListState[id], form);
-    // formListState[id] = { ...formListState[id], ...form };
     setFormListState(formListState);
   });
 
@@ -61,6 +60,7 @@ const ContactSubForm = (props) => {
         {...form.fieldProps("con_type")}
         onChange={(e) => listItem.setState("con_type", e.target.value)}
         option1=""
+        defaultValue={"email"}
       >
         {conTypeOptions}
       </GridSelect>
@@ -70,6 +70,7 @@ const ContactSubForm = (props) => {
         label="Method"
         {...form.fieldProps("con_method")}
         onChange={(e) => listItem.setState("con_method", e.target.value)}
+        defaultValue={"email"}
       >
         {conMethodOptions}
       </GridSelect>
