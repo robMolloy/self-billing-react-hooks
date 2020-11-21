@@ -14,34 +14,48 @@ import Schema from "./ContactSchema";
 import DeleteIcon from "../customIcons/DeleteIcon";
 import { contactBlankRow } from "../../object_info/blankRows";
 
-import rhfListItemObject from "../../user_modules/rhfListItemObject";
+// import rhfListItemObject from "  ../../user_modules/rhfListItemObject";
 import useForm from "../../custom_hooks/useRHForm";
 
 const ContactSubForm = (props) => {
-  let values, formListState, setFormListState;
-  ({ values = contactBlankRow, formListState, setFormListState } = props);
+  let values, state, setState;
+  ({ values = contactBlankRow, state, setState } = props);
 
   const id = values.id;
 
-  const form = useForm({
-    defaultValues: { ...values },
-    Schema,
-  });
+  React.useEffect(() => {
+    state.contacts = state?.contacts ?? {};
+
+    let controls = state?.contacts?.controls ?? {};
+    let stateValues = state?.contacts?.values ?? {};
+
+    state.contacts.values = { ...stateValues, [id]: values };
+    state.contacts.controls = { ...controls, [id]: form };
+
+    setState(state);
+    //eslint-disable-next-line
+  }, []);
+
+  const form = useForm({ defaultValues: values, Schema });
 
   const con_type = form.watch("con_type");
   const con_address = form.watch("con_address");
 
-  React.useEffect(() => {
-    Object.assign(formListState[id], form);
-    setFormListState(formListState);
-  });
+  const removeItem = () => {
+    delete state.contacts.values[id];
+    delete state.contacts.controls[id];
+    setState({ ...state });
+  };
 
-  const listItem = new rhfListItemObject({
-    id,
-    formListState,
-    setFormListState,
-    defaultValues: contactBlankRow,
-  });
+  const setStateValue = (name, value) => {
+    state.contacts.values[id][name] = value;
+    setState(state);
+  };
+
+  const setFieldValue = (name, value, params = { shouldValidate: true }) => {
+    state.contacts.controls[id].setValue(name, value, params);
+    setStateValue(name, value);
+  };
 
   const { [con_type]: conMethods = [] } = contactMethods;
 
@@ -55,12 +69,12 @@ const ContactSubForm = (props) => {
   return (
     <>
       <GridSelect
+        autoFocus
         grid={{ xs: 6, sm: 3 }}
         label="Type"
         {...form.fieldProps("con_type")}
-        onChange={(e) => listItem.setState("con_type", e.target.value)}
+        onChange={(e) => setStateValue("con_type", e.target.value)}
         option1=""
-        defaultValue={"email"}
       >
         {conTypeOptions}
       </GridSelect>
@@ -69,8 +83,7 @@ const ContactSubForm = (props) => {
         grid={{ xs: 6, sm: 3 }}
         label="Method"
         {...form.fieldProps("con_method")}
-        onChange={(e) => listItem.setState("con_method", e.target.value)}
-        defaultValue={"email"}
+        onChange={(e) => setStateValue("con_method", e.target.value)}
       >
         {conMethodOptions}
       </GridSelect>
@@ -78,8 +91,9 @@ const ContactSubForm = (props) => {
         grid={{ xs: 10, sm: 4 }}
         onChange={(e) => {
           if (con_type === "phone") e.target.value = phone(e.target.value);
-          listItem.setState("con_address", e.target.value);
-          listItem.setValue(`con_address_${con_type}`, e.target.value);
+
+          setStateValue("con_address", e.target.value);
+          setFieldValue(`con_address_${con_type}`, e.target.value);
         }}
         name="con_address"
         label={ucFirst(con_type)}
@@ -108,7 +122,7 @@ const ContactSubForm = (props) => {
         xs={2}
         // justify="center"
         // alignItems="center"
-        onClick={() => listItem.remove()}
+        onClick={() => removeItem()}
       >
         <DeleteIcon />
       </GridItem>

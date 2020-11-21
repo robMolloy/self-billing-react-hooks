@@ -22,7 +22,7 @@ class rhfListItemObject {
   };
 
   setState = (name, value) => {
-    this.formListState[this.id]["values"][name] = value;
+    this.formListState[this.id].values[name] = value;
     this.setFormListState(this.formListState);
   };
 

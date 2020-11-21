@@ -13,7 +13,7 @@ const CustomerList = () => {
   const { customers } = useContext(CustomerContext);
   const { contactsOnCustomers } = useContext(ContactsOnCustomerContext);
 
-  const customerArray = Object.values(customers);
+  // const customerArray = Object.values(customers);
   // console.log(customerArray);
 
   const [modalCustomer, setModalCustomer] = useState(undefined);
@@ -26,14 +26,13 @@ const CustomerList = () => {
   return (
     <>
       <MainContainer>
-        {customerArray.map((customer) => {
-          const key = customer.id;
-          const customerContacts = contactsOnCustomers[customer.id];
+        {Object.entries(customers).map(([id, customerRow]) => {
+          const customerContacts = contactsOnCustomers[id];
           return (
             <CustomerDetails
               {...{
-                key,
-                customer,
+                key: id,
+                customer: { [id]: customerRow },
                 setModalCustomer,
                 setModalContacts,
                 customerContacts,
@@ -43,13 +42,15 @@ const CustomerList = () => {
         })}
       </MainContainer>
       <Modal {...{ open: modalOpen, onClose }}>
-        <CustomerForm
-          {...{
-            defaultValues: modalCustomer,
-            contacts: modalContacts,
-            setModalCustomer,
-          }}
-        />
+        {modalCustomer !== undefined && (
+          <CustomerForm
+            {...{
+              customers: modalCustomer,
+              contacts: modalContacts,
+              setModalCustomer,
+            }}
+          />
+        )}
       </Modal>
     </>
   );

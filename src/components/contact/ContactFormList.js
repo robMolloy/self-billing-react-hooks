@@ -3,17 +3,14 @@ import { v4 as uuid } from "uuid";
 import ContactFormListItem from "./ContactFormListItem";
 
 const ContactFormList = (props) => {
-  let formListState, setFormListState;
-  ({ formListState, setFormListState } = props);
+  let state, setState, values;
+  ({ state, setState, values = {} } = props);
 
-  return Object.values(formListState).map((formListItem) => {
-    const { values } = formListItem;
+  return Object.entries(values).map(([id, contact]) => {
     const key = uuid();
 
     return (
-      <ContactFormListItem
-        {...{ key, values, formListState, setFormListState }}
-      />
+      <ContactFormListItem {...{ key, state, setState, values: contact }} />
     );
   });
 };
