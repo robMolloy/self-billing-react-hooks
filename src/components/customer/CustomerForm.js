@@ -43,6 +43,9 @@ const CustomerForm = (props) => {
     exists = false,
   } = props);
 
+  // console.log(contacts);
+  // console.log(customers);
+
   let [state, setState] = React.useState({
     contacts: { values: contacts },
     customers: { values: customers },
@@ -81,6 +84,7 @@ const CustomerForm = (props) => {
       let contacts = contactList.getObjects();
 
       addContactsOnCustomer({ contacts, customer });
+
       setState({});
       if (exists) setModalCustomer(undefined);
     }

@@ -83,9 +83,10 @@ class rhfListObject {
     let objects = {};
 
     Object.entries(values).forEach(([id, fieldValues]) => {
-      objects[id] = populateObject({ ...templateDatarow }, fieldValues);
+      console.log(id);
+      objects[id] = populateObject({ ...templateDatarow, id }, fieldValues);
     });
-
+    console.log(objects);
     return objects;
   }
 
