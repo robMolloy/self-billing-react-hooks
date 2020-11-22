@@ -19,8 +19,8 @@ function App() {
       <div className="App">
         <NavBar />
         <Route exact path="/" component={HomePage} />
-        {/* <Route exact path="/customers" component={CustomerPage} />
-        <Route exact path="/contacts" component={ContactPage} />
+        <Route exact path="/customers" component={CustomerPage} />
+        {/* <Route exact path="/contacts" component={ContactPage} />
         <Route exact path="/prjCusLinks" component={PrjCusLinkPage} />
         <Route exact path="/projects" component={ProjectPage} />
         <Route exact path="/recItems" component={RecItemPage} />

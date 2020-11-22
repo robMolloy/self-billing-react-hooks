@@ -3,10 +3,8 @@ import React from "react";
 // import rhfListObject from "../../user_modules/rhfListObject";
 
 // import { contactBlankRow } from "../../object_info/blankRows";
-import {
-  getBlankContacts,
-  getBlankCustomers,
-} from "../../object_info/blankObjects";
+import { getBlankCustomers } from "../../object_info/blankObjects";
+import { contactBlankRow, customerBlankRow } from "../../object_info/blankRows";
 
 // import CustomerFormControls from "./CustomerFormControls";
 // import CustomerFormBody from "./CustomerFormBody";
@@ -21,6 +19,7 @@ import GridItem from "../customComponents/GridItem";
 import Form from "../customComponents/Form";
 
 import useContactsOnCustomerContext from "../../custom_hooks/useContactsOnCustomerContext";
+import rhfListObject from "../../user_modules/rhfListObject";
 
 // customers = {
 //   values: {
@@ -40,8 +39,8 @@ const CustomerForm = (props) => {
   ({
     contacts = {},
     customers = getBlankCustomers(),
-    exists = false,
     setModalCustomer,
+    exists = false,
   } = props);
 
   let [state, setState] = React.useState({
@@ -51,35 +50,37 @@ const CustomerForm = (props) => {
 
   let { addContactsOnCustomer } = useContactsOnCustomerContext();
 
-  const addItem = () => {
-    let contacts = state?.contacts?.values ?? {};
-    Object.assign(contacts, getBlankContacts(1, { con_type: "phone" }));
+  let contactList = new rhfListObject({
+    defaultValues: { ...contactBlankRow, con_type: "phone" },
+    objectType: "contacts",
+    state,
+    setState,
+  });
+  let customerList = new rhfListObject({
+    defaultValues: { ...customerBlankRow },
+    objectType: "customers",
+    state,
+    setState,
+  });
 
-    // contacts can be missing from state if state set to {}
-    state.contacts = state.contacts ?? {};
-    state.contacts.values = contacts;
-    setState({ ...state });
-  };
+  //eslint-disable-next-line
+  React.useEffect(() => {
+    contactList.triggerFieldIfChanged();
+    customerList.triggerFieldIfChanged();
+  });
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
     let valid = true;
-    for (let controls of Object.values(state?.customers?.controls ?? {})) {
-      await controls.trigger();
-      if (Object.keys(controls.errors).length !== 0) valid = false;
-    }
-
-    for (let controls of Object.values(state?.contacts?.controls ?? {})) {
-      await controls.trigger();
-      if (Object.keys(controls.errors).length !== 0) valid = false;
-    }
+    if (!(await customerList.isValid())) valid = false;
+    if (!(await contactList.isValid())) valid = false;
 
     if (valid) {
-      addContactsOnCustomer({
-        contacts: state?.contacts?.values ?? {},
-        customer: Object.values(state.customers.values)[0],
-      });
+      let customer = Object.values(customerList.getObjects())[0];
+      let contacts = contactList.getObjects();
+
+      addContactsOnCustomer({ contacts, customer });
       setState({});
       if (exists) setModalCustomer(undefined);
     }
@@ -91,9 +92,9 @@ const CustomerForm = (props) => {
         <GridContainer style={{ minHeight: "144px" }}>
           <CustomerFormList
             {...{
-              state,
-              setState,
               values: state?.customers?.values ?? getBlankCustomers(),
+              setState,
+              state,
               type: "body",
             }}
           />
@@ -104,7 +105,7 @@ const CustomerForm = (props) => {
           <GridButton
             grid={{ xs: 2 }}
             variant="outlined"
-            onClick={() => addItem()}
+            onClick={() => contactList.addItem()}
             children="+"
           />
 

@@ -25,11 +25,13 @@ const ContactSubForm = (props) => {
   React.useEffect(() => {
     state.contacts = state?.contacts ?? {};
 
-    let controls = state?.contacts?.controls ?? {};
-    let stateValues = state?.contacts?.values ?? {};
+    let controls = state.contacts?.controls ?? {};
+    let stateValues = state.contacts?.values ?? {};
 
     state.contacts.values = { ...stateValues, [id]: values };
+    // if (!controls[id]) state.contacts.controls = { ...controls, [id]: form };
     state.contacts.controls = { ...controls, [id]: form };
+    // state.contacts.controls = { ...controls, [id]: form };
 
     setState(state);
     //eslint-disable-next-line
@@ -48,7 +50,19 @@ const ContactSubForm = (props) => {
 
   const setStateValue = (name, value) => {
     state.contacts.values[id][name] = value;
+    updateStateErrors();
+
     setState(state);
+  };
+
+  const updateStateErrors = () => {
+    state.contacts.errors = state.contacts.errors ?? {};
+    let errors = state.contacts.controls[id].errors;
+    let errorLength = Object.keys(errors).length;
+    let isValid = errorLength === 0;
+
+    if (isValid) delete state.contacts.errors[id];
+    else state.contacts.errors[id] = errors;
   };
 
   const setFieldValue = (name, value, params = { shouldValidate: true }) => {
@@ -56,7 +70,7 @@ const ContactSubForm = (props) => {
     setStateValue(name, value);
   };
 
-  const { [con_type]: conMethods = [] } = contactMethods;
+  const { [con_type]: conMethods } = contactMethods;
 
   const conTypeOptions = contactTypes.map((value) => (
     <Option {...{ key: value, value }}>{ucFirst(value)}</Option>
