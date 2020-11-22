@@ -11,14 +11,15 @@ import ContactIcon from "../customIcons/ContactIcon";
 import Typography from "@material-ui/core/Typography";
 import useCustomerReducer from "../../custom_hooks/useCustomerContext";
 
-const CustomerDetails = (props) => {
-  let customer, customerContacts, setModalCustomer, setModalContacts;
-  ({ customer, customerContacts, setModalCustomer, setModalContacts } = props);
+import ContactDetailsList from "../contact/ContactDetailsList";
 
-  let customerRow = Object.values(customer)[0];
+const CustomerDetails = (props) => {
+  let customer, contacts, setModalCustomer, setModalContacts;
+  ({ customer, contacts, setModalCustomer, setModalContacts } = props);
+
+  const customerRow = Object.values(customer)[0];
 
   const { removeCustomerDialogue } = useCustomerReducer();
-  const customerContactsArray = Object.values(customerContacts);
 
   return (
     <Accordian
@@ -27,26 +28,21 @@ const CustomerDetails = (props) => {
           <Typography style={{ flex: 1 }}>
             {customerRow.cus_first_name} {customerRow.cus_last_name}
           </Typography>
-          <Typography>{customerContactsArray.length}</Typography>
+          <Typography>{Object.values(contacts).length}</Typography>
           <ContactIcon />
         </>
       }
     >
       <GridContainer>
-        {customerContactsArray.map((contact) => (
-          <React.Fragment key={contact.id}>
-            <GridItem xs={3}>{contact.con_type} </GridItem>
-            <GridItem xs={3}>{contact.con_method}</GridItem>
-            <GridItem xs={4}>{contact.con_address}</GridItem>
-            <GridItem xs={2}></GridItem>
-          </React.Fragment>
-        ))}
+        <ContactDetailsList {...{ contacts }} />
+        {/* {contactRowArray.map((contactRow) => (
+        ))} */}
         <GridItem xs={10}></GridItem>
         <GridItem xs={1}>
           <EditIcon
             onClick={() => {
               setModalCustomer(customer);
-              setModalContacts(customerContacts);
+              setModalContacts(contacts);
             }}
           />
         </GridItem>

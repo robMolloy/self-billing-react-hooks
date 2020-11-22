@@ -1,7 +1,7 @@
 import React from "react";
 
 import CustomerForm from "./CustomerForm";
-import CustomerList from "./CustomerList";
+import CustomerDetailsList from "./CustomerDetailsList";
 
 import CustomerContextProvider from "../../contexts/CustomerContext";
 import ContactContextProvider from "../../contexts/ContactContext";
@@ -13,7 +13,7 @@ const CustomerPage = () => {
       <CustomerContextProvider>
         <ContactsOnCustomerContextProvider>
           <CustomerForm />
-          <CustomerList />
+          <CustomerDetailsList />
         </ContactsOnCustomerContextProvider>
       </CustomerContextProvider>
     </ContactContextProvider>

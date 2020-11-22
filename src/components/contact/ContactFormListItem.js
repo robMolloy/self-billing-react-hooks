@@ -10,11 +10,10 @@ import { ucFirst } from "../../user_modules/StringManipulation";
 import GridSelect from "../customComponents/GridSelect";
 import Option from "../customComponents/Option";
 
-import Schema from "./ContactSchema";
+import Schema from "../../schemas/ContactSchema";
 import DeleteIcon from "../customIcons/DeleteIcon";
 import { contactBlankRow } from "../../object_info/blankRows";
 
-// import rhfListItemObject from "  ../../user_modules/rhfListItemObject";
 import useForm from "../../custom_hooks/useRHForm";
 
 const ContactSubForm = (props) => {

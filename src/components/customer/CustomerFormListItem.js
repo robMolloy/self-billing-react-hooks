@@ -1,20 +1,9 @@
 import React from "react";
-// import phone from "../../user_modules/normalizePhoneNumber";
 
 import GridInput from "../customComponents/GridInput";
-// import GridItem from "../customComponents/GridItem";
-// import Input from "../customComponents/Input";
-
-// import { contactMethods, contactTypes } from "../../contexts/options";
-// import { ucFirst } from "../../user_modules/StringManipulation";
-// import GridSelect from "../customComponents/GridSelect";
-// import Option from "../customComponents/Option";
-
-// import DeleteIcon from "../customIcons/DeleteIcon";
-import Schema from "./CustomerSchema";
+import Schema from "../../schemas/CustomerSchema";
 import { customerBlankRow } from "../../object_info/blankRows";
 
-// import rhfListItemObject from "  ../../user_modules/rhfListItemObject";
 import useForm from "../../custom_hooks/useRHForm";
 
 const CustomerFormListItem = (props) => {

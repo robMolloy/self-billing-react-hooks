@@ -1,16 +1,15 @@
 import React from "react";
-import useContactReducer from "../../custom_hooks/useContactContext";
+import GridItem from "../customComponents/GridItem";
 
 const ContactDetails = ({ contact }) => {
-  const { id, con_method, con_address } = contact;
-  const { removeContact } = useContactReducer();
-
+  const contactRow = Object.values(contact)[0];
   return (
-    <div className="panel" onClick={() => removeContact(id)}>
-      <div className="jc">
-        {con_method}: {con_address}
-      </div>
-    </div>
+    <>
+      <GridItem xs={3}>{contactRow.con_type} </GridItem>
+      <GridItem xs={3}>{contactRow.con_method}</GridItem>
+      <GridItem xs={4}>{contactRow.con_address}</GridItem>
+      <GridItem xs={2}></GridItem>
+    </>
   );
 };
 

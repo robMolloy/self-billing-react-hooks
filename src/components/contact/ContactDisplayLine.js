@@ -1,18 +1,15 @@
 import React from "react";
+import GridItem from "../customComponents/GridItem";
 
-const ContactDisplayLine = () => {
+const ContactDisplayLine = ({ contact }) => {
+  const contactRow = Object.values(contact)[0];
   return (
-    <React.Fragment key={uuid()}>
-      <GridItem xs={3}>{contact.con_type}</GridItem>
-      <GridItem xs={3}>{contact.con_method}</GridItem>
-      <GridItem xs={4}>{contact.con_address}</GridItem>
-      <GridItem xs={1} onClick={() => editContactFromStateInForm(contact)}>
-        <EditIcon />
-      </GridItem>
-      <GridItem xs={1} onClick={() => deleteContactFromState(contact.id)}>
-        <DeleteIcon />
-      </GridItem>
-    </React.Fragment>
+    <>
+      <GridItem xs={3}>{contactRow.con_type} </GridItem>
+      <GridItem xs={3}>{contactRow.con_method}</GridItem>
+      <GridItem xs={4}>{contactRow.con_address}</GridItem>
+      <GridItem xs={2}></GridItem>
+    </>
   );
 };
 

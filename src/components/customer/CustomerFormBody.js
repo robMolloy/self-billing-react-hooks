@@ -1,7 +1,7 @@
 import React from "react";
 
 import GridInput from "../customComponents/GridInput";
-import Schema from "./CustomerSchema";
+import Schema from "../../schemas/CustomerSchema";
 import { customerBlankRow } from "../../object_info/blankRows";
 
 import useForm from "../../custom_hooks/useRHForm";

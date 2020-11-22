@@ -27,7 +27,7 @@ const CustomerList = () => {
     <>
       <MainContainer>
         {Object.entries(customers).map(([id, customerRow]) => {
-          const customerContacts = contactsOnCustomers[id];
+          const contacts = contactsOnCustomers[id];
           return (
             <CustomerDetails
               {...{
@@ -35,7 +35,7 @@ const CustomerList = () => {
                 customer: { [id]: customerRow },
                 setModalCustomer,
                 setModalContacts,
-                customerContacts,
+                contacts,
               }}
             />
           );
