@@ -1,21 +1,22 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import { ProjectReducer } from "../reducers/ProjectReducer";
+import ProjectReducer from "../reducers/ProjectReducer";
 import mightyStorage from "../user_modules/mightyStorage";
 
 export const ProjectContext = createContext();
 
 const ProjectContextProvider = (props) => {
-  const [projects, dispatch] = useReducer(
+  const objectType = "projects";
+  const [objects, dispatch] = useReducer(
     ProjectReducer,
-    mightyStorage.getItem("sb_projects", {})
+    mightyStorage.getItem(`sb_${objectType}`, {})
   );
 
   useEffect(() => {
-    mightyStorage.setItem("sb_projects", projects);
-  }, [projects]);
+    mightyStorage.setItem(`sb_${objectType}`, objects);
+  }, [objects]);
 
   return (
-    <ProjectContext.Provider value={{ projects, dispatch }}>
+    <ProjectContext.Provider value={{ objects, dispatch }}>
       {props.children}
     </ProjectContext.Provider>
   );

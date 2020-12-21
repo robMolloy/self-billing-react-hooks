@@ -1,13 +1,9 @@
-import { v4 as uuid } from "uuid";
-
-export const PrjCusLinkReducer = (state, action) => {
+const PrjCusLinkReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_PRJCUSLINK":
-      const id =
-        action.prjCusLink.id === undefined ? uuid() : action.prjCusLink.id;
-      return { ...state, [id]: action.prjCusLink };
+    case "ADD":
+      return { ...state, ...action.objects };
 
-    case "REMOVE_PRJCUSLINK":
+    case "REMOVE":
       delete state[action.id];
       return { ...state };
 
@@ -15,3 +11,5 @@ export const PrjCusLinkReducer = (state, action) => {
       return { ...state };
   }
 };
+
+export default PrjCusLinkReducer;

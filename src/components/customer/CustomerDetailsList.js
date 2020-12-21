@@ -13,9 +13,6 @@ const CustomerList = () => {
   const { customers } = useContext(CustomerContext);
   const { contactsOnCustomers } = useContext(ContactsOnCustomerContext);
 
-  // const customerArray = Object.values(customers);
-  // console.log(customerArray);
-
   const [modalCustomer, setModalCustomer] = useState(undefined);
   const [modalContacts, setModalContacts] = useState(undefined);
 

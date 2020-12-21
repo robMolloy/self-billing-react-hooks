@@ -1,16 +1,10 @@
 import React from "react";
 
-// import rhfListObject from "../../user_modules/rhfListObject";
-
-// import { contactBlankRow } from "../../object_info/blankRows";
 import { getBlankCustomers } from "../../object_info/blankObjects";
 import { contactBlankRow, customerBlankRow } from "../../object_info/blankRows";
 
-// import CustomerFormControls from "./CustomerFormControls";
-// import CustomerFormBody from "./CustomerFormBody";
 import ContactFormList from "../contact/ContactFormList";
 import CustomerFormList from "../customer/CustomerFormList";
-// import CustomerFormListItem from "../customer/CustomerFormListItem";
 
 import MainContainer from "../customComponents/MainContainer";
 import GridContainer from "../customComponents/GridContainer";
@@ -42,9 +36,6 @@ const CustomerForm = (props) => {
     setModalCustomer,
     exists = false,
   } = props);
-
-  // console.log(contacts);
-  // console.log(customers);
 
   let [state, setState] = React.useState({
     contacts: { values: contacts },

@@ -26,7 +26,14 @@ const CustomerFormBody = (props) => {
     //eslint-disable-next-line
   }, []);
 
-  const form = useForm({ defaultValues: values, Schema });
+  const form = useForm({
+    defaultValues: values,
+    Schema,
+    objectType: "customers",
+    state,
+    setState,
+    id,
+  });
 
   const setStateValue = (name, value) => {
     state.customers.values[id][name] = value;

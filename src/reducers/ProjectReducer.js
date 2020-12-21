@@ -1,12 +1,12 @@
 import { v4 as uuid } from "uuid";
 
-export const ProjectReducer = (state, action) => {
+const ProjectReducer = (state, action) => {
   switch (action.type) {
-    case "ADD_PROJECT":
-      const id = action.project.id === undefined ? uuid() : action.project.id;
-      return { ...state, [id]: action.project };
+    case "ADD":
+      const id = action.object.id ?? uuid();
+      return { ...state, [id]: action.object };
 
-    case "REMOVE_PROJECT":
+    case "REMOVE":
       delete state[action.id];
       return { ...state };
 
@@ -14,3 +14,5 @@ export const ProjectReducer = (state, action) => {
       return { ...state };
   }
 };
+
+export default ProjectReducer;

@@ -6,10 +6,9 @@ import { PrjCusLinkContext } from "./PrjCusLinkContext";
 export const CustomersOnProjectContext = createContext();
 
 const CustomersOnProjectContextProvider = (props) => {
-  const { projects } = useContext(ProjectContext);
+  const { objects: projects } = useContext(ProjectContext);
   const { customers } = useContext(CustomerContext);
-  const { prjCusLinks } = useContext(PrjCusLinkContext);
-
+  const { objects: prjCusLinks } = useContext(PrjCusLinkContext);
   const projectArray = Object.values(projects);
   const prjCusLinksArray = Object.values(prjCusLinks);
 

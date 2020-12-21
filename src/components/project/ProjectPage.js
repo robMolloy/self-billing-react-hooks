@@ -1,9 +1,10 @@
 import React from "react";
 import ProjectForm from "./ProjectForm";
-import ProjectList from "./ProjectList";
+import ProjectDetailsList from "./ProjectDetailsList";
 import ProjectContextProvider from "../../contexts/ProjectContext";
-import CustomerContextProvider from "../../contexts/CustomerContext";
 import PrjCusLinkContextProvider from "../../contexts/PrjCusLinkContext";
+import CustomerContextProvider from "../../contexts/CustomerContext";
+// import PrjCusLinkContextProvider from "../../contexts/PrjCusLinkContext";
 import CustomersOnProjectContextProvider from "../../contexts/CustomersOnProjectContext";
 
 const ProjectPage = () => {
@@ -13,7 +14,7 @@ const ProjectPage = () => {
         <PrjCusLinkContextProvider>
           <CustomersOnProjectContextProvider>
             <ProjectForm />
-            <ProjectList />
+            <ProjectDetailsList />
           </CustomersOnProjectContextProvider>
         </PrjCusLinkContextProvider>
       </ProjectContextProvider>

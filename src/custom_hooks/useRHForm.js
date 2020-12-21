@@ -10,8 +10,16 @@ const useFormProps = (props) => {
 };
 
 const useRHForm = (props) => {
-  let defaultValues, Schema, resolver;
-  ({ defaultValues, Schema, resolver } = props);
+  let defaultValues, Schema, resolver, objectType, state, setState, id;
+  ({
+    defaultValues,
+    Schema,
+    resolver,
+    objectType,
+    state,
+    setState,
+    id,
+  } = props);
 
   const form = useForm(useFormProps({ defaultValues, Schema, resolver }));
 
@@ -29,6 +37,16 @@ const useRHForm = (props) => {
       helperText: form.errors?.[name]?.message,
       name,
     };
+  };
+
+  form.setStateValue = (name, value) => {
+    state[objectType].values[id][name] = value;
+    setState(state);
+  };
+
+  form.setFieldValue = (name, value, params = { shouldValidate: true }) => {
+    state[objectType].controls[id].setValue(name, value, params);
+    form.setStateValue(name, value);
   };
 
   return form;
